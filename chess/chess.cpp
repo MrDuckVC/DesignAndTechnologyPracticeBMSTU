@@ -218,8 +218,6 @@ Chess::Chess() {
     desk[7][5].SetFigure(Figure(FigureType::BISHOP, Color::BLACK));
     desk[7][6].SetFigure(Figure(FigureType::KNIGHT, Color::BLACK));
     desk[7][7].SetFigure(Figure(FigureType::ROOK, Color::BLACK));
-
-    PrintBoard();
 }
 
 void Chess::PrintBoard() {
