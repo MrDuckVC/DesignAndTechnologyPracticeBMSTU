@@ -279,4 +279,5 @@ const std::string Chess::GetDescription() {
            "\"checkmate\" (threaten with inescapable capture) the enemy king. "
            "There are also several ways a game can end in a draw.";
 }
+const std::string Chess::GetLogoFile() {return "./chess/chessLogo.txt";}
 } // namespace chess

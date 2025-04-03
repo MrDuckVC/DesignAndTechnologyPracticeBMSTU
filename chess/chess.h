@@ -181,5 +181,11 @@ public:
      * @return Описание игры
      */
     const std::string GetDescription() override;
+    /**
+     * @brief .txt файл с лого, можно взять с сайта https://textkool.com/en/ascii-art-generator?hl=default&vl=default&font=Delta%20Corps%20Priest%201
+     *
+     * @return Имя файла с логотипом
+     */
+    const std::string GetLogoFile() override;
 };
 } // namespace chess

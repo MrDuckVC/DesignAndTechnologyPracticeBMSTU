@@ -7,7 +7,7 @@ namespace game {
  * @brief Класс игры
  */
 class Game {
-private:
+ private:
     /**
      * @brief Количество игр в массиве games
      */
@@ -15,9 +15,9 @@ private:
     /**
      * @brief Максимальное количество игр в массиве games
      */
-    static Game **games;
+    static Game** games;
 
-public:
+ public:
     /**
      * @brief Запускает игру
      */
@@ -35,13 +35,24 @@ public:
      * @return Описание игры
      */
     virtual const std::string GetDescription() = 0;
+    /**
+     * @brief .txt файл с лого, можно взять с сайта https://textkool.com/en/ascii-art-generator?hl=default&vl=default&font=Delta%20Corps%20Priest%201
+     *
+     * @return Имя файла с логотипом
+     */
+    virtual const std::string GetLogoFile() = 0;
+
+    /**
+     * @brief Печатает лого игры
+     */
+    void PrintLogo();
 
     /**
      * @brief Добавляет игру в статический массив
      *
      * @param game Указатель на игру
      */
-    static void AddGame(Game *game);
+    static void AddGame(Game* game);
     /**
      * @brief Получает игру из статического массива
      *
@@ -57,4 +68,4 @@ public:
      */
     static int GetGamesCount();
 };
-} // namespace game
+}  // namespace game

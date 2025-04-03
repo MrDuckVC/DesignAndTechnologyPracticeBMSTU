@@ -1,7 +1,7 @@
-#include "games/game.h"
 #include "chess/chess.h"
+#include "games/game.h"
 
-game::Game **game::Game::games = nullptr;
+game::Game** game::Game::games = nullptr;
 int game::Game::gamesCount = 0;
 
 int main() {
