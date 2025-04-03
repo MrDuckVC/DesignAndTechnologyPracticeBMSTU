@@ -5,42 +5,58 @@
 #include <string>
 
 namespace {
-const std::string WHITE_SQUARE = "█";
-const std::string BLACK_SQUARE = " ";
+/// @name Символы для заполнения шахматного поля
+/// @{
+const std::string WHITE_SQUARE_SYMBOL = "█"; ///< Символ для белого квадрата
+const std::string BLACK_SQUARE_SYMBOL = " "; ///< Символ для чёрного квадрата
+/// @}
 
-const std::string BLACK_PAWN_SYMBOL = "\u2659";
-const std::string BLACK_KNIGHT_SYMBOL = "\u2658";
-const std::string BLACK_BISHOP_SYMBOL = "\u2657";
-const std::string BLACK_ROOK_SYMBOL = "\u2656";
-const std::string BLACK_QUEEN_SYMBOL = "\u2655";
-const std::string BLACK_KING_SYMBOL = "\u2654";
+/// @name Символы шахматных фигурок чёрного цвета.
+/// @{
+const std::string BLACK_PAWN_SYMBOL = "\u2659"; // Чёрная пешка, ♟
+const std::string BLACK_KNIGHT_SYMBOL = "\u2658"; // Чёрный конь, ♞
+const std::string BLACK_BISHOP_SYMBOL = "\u2657"; // Чёрный слон, ♝
+const std::string BLACK_ROOK_SYMBOL = "\u2656"; // Чёрная ладья, ♜
+const std::string BLACK_QUEEN_SYMBOL = "\u2655"; // Чёрная ферзь, ♛
+const std::string BLACK_KING_SYMBOL = "\u2654"; // Чёрный король, ♚
+/// @}
 
-const std::string WHITE_PAWN_SYMBOL = "\u265F";
-const std::string WHITE_KNIGHT_SYMBOL = "\u265E";
-const std::string WHITE_BISHOP_SYMBOL = "\u265D";
-const std::string WHITE_ROOK_SYMBOL = "\u265C";
-const std::string WHITE_QUEEN_SYMBOL = "\u265B";
-const std::string WHITE_KING_SYMBOL = "\u265A";
+/// @name Символы шахматных фигурок белого цвета.
+/// @{
+const std::string WHITE_PAWN_SYMBOL = "\u265F"; // Белая пешка, ♙
+const std::string WHITE_KNIGHT_SYMBOL = "\u265E"; // Белый конь, ♘
+const std::string WHITE_BISHOP_SYMBOL = "\u265D"; // Белый слон, ♗
+const std::string WHITE_ROOK_SYMBOL = "\u265C"; // Белая ладья, ♖
+const std::string WHITE_QUEEN_SYMBOL = "\u265B"; // Белая ферзь, ♕
+const std::string WHITE_KING_SYMBOL = "\u265A"; // Белый король, ♔
+/// @}
 
-const int PAWN_VALUE = 1;
-const int KNIGHT_VALUE = 3;
-const int BISHOP_VALUE = 3;
-const int ROOK_VALUE = 5;
-const int QUEEN_VALUE = 9;
-const int KING_VALUE = 0;
+/// @name Цена шахматных фигур.
+/// @{
+const int PAWN_VALUE = 1; ///< Цена пешки
+const int KNIGHT_VALUE = 3; ///< Цена коня
+const int BISHOP_VALUE = 3; ///< Цена слона
+const int ROOK_VALUE = 5; ///< Цена ладьи
+const int QUEEN_VALUE = 9; ///< Цена ферзя
+const int KING_VALUE = 0; ///< Цена короля
+/// @}
 
+/**
+ * @brief Вывод квадрата нужного цвета (занимает 2 символа)
+ *
+ * @param color Цвет квадрата
+ */
 void PrintColorSquare(chess::Color color) {
     if (color == chess::Color::WHITE) {
-        std::cout << WHITE_SQUARE << WHITE_SQUARE;
+        std::cout << WHITE_SQUARE_SYMBOL << WHITE_SQUARE_SYMBOL;
     } else {
-        std::cout << BLACK_SQUARE << BLACK_SQUARE;
+        std::cout << BLACK_SQUARE_SYMBOL << BLACK_SQUARE_SYMBOL;
     }
 }
 } // namespace
 
 namespace chess {
 Figure::Figure() : figureType(FigureType::PAWN), figureColor(Color::WHITE), figureValue(0) {};
-
 Figure::Figure(FigureType figureType, Color figureColor) : figureType(figureType), figureColor(figureColor) {
     switch (figureType) {
     case FigureType::PAWN:
@@ -117,26 +133,19 @@ void Figure::PrintFigure() {
             break;
         }
     }
-    std::cout << BLACK_SQUARE;
+    std::cout << BLACK_SQUARE_SYMBOL;
 }
 
 int Figure::GetFigureValue() { return figureValue; }
-
 FigureType Figure::GetFigureType() { return figureType; }
-
 Color Figure::GetFigureColor() { return figureColor; }
 
-Cell::Cell() : cellColor(Color::WHITE), figure(), isEmpty(true) {}
 Cell::Cell(Color cellColor) : cellColor(cellColor), figure(), isEmpty(true) {}
 Cell::Cell(Color cellColor, Figure figure) : cellColor(cellColor), figure(figure), isEmpty(false) {}
 
-/**
- * @brief Печатает строчку клетки по номеру строчки
- *
- * @param cellLine Номер строчки клетки, отчёт начинается с нуля
- */
 void Cell::PrintCell(int cellLine) {
     if (!isEmpty && ((CELL_SIZE - 1) / 2) == cellLine) {
+        // Если это строчка с фигурой
         for (int i = 0; i < (CELL_SIZE - 1) / 2; ++i) {
             PrintColorSquare(cellColor);
         }
@@ -155,11 +164,9 @@ void Cell::SetFigure(Figure figure) {
     this->figure = figure;
     isEmpty = false;
 }
-
 Figure Cell::GetFigure() {
     return figure;
 }
-
 Color Cell::GetCellColor() {
     return cellColor;
 }
@@ -256,10 +263,11 @@ void Chess::PrintBoard() {
     }
 }
 
-void Chess::Run() {}
+void Chess::Run() {
+    // TODO
+}
 
 const std::string Chess::GetName() { return "Chess"; }
-
 const std::string Chess::GetDescription() {
     return "Chess is an abstract strategy board game for two players which "
            "involves no hidden information and no elements of chance. It is "
