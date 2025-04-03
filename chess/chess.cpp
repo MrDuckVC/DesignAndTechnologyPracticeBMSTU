@@ -3,6 +3,9 @@
 #include <iostream>
 
 namespace {
+const char WHITE_SQUARE = '█';
+const char BLACH_SQUARE = ' ';
+
 const char PAWN_SYMBOL = 'P';
 const char KNIGHT_SYMBOL = 'N';
 const char BISHOP_SYMBOL = 'B';
@@ -16,9 +19,19 @@ const int BISHOP_VALUE = 3;
 const int ROOK_VALUE = 5;
 const int QUEEN_VALUE = 9;
 const int KING_VALUE = 0;
+
+void PrintColorSquare(chess::Color color) {
+    if (color == chess::Color::WHITE) {
+        std::cout << WHITE_SQUARE << WHITE_SQUARE;
+    } else {
+        std::cout << BLACH_SQUARE << BLACH_SQUARE;
+    }
+}
 } // namespace
 
 namespace chess {
+Figure::Figure() : figureType(FigureType::PAWN), figureColor(Color::WHITE), figureValue(0) {};
+
 Figure::Figure(FigureType figureType, Color figureColor) : figureType(figureType), figureColor(figureColor) {
     switch (figureType) {
     case FigureType::PAWN:
@@ -45,8 +58,18 @@ Figure::Figure(FigureType figureType, Color figureColor) : figureType(figureType
     }
 }
 
-
 void Figure::PrintFigure() {
+    switch (figureColor) {
+    case Color::BLACK:
+        std::cout << BLACH_SQUARE;
+        break;
+    case Color::WHITE:
+        std::cout << WHITE_SQUARE;
+        break;
+    default:
+        throw std::invalid_argument("Uknown `Color` to print `Figure`.");
+        break;
+    }
     switch (figureType) {
     case FigureType::PAWN:
         std::cout << PAWN_SYMBOL;
@@ -66,6 +89,9 @@ void Figure::PrintFigure() {
     case FigureType::KING:
         std::cout << KING_SYMBOL;
         break;
+    default:
+        throw std::invalid_argument("Uknown `FigureType` to set `figureValue`.");
+        break;
     }
 }
 
@@ -74,6 +100,40 @@ int Figure::GetFigureValue() { return figureValue; }
 FigureType Figure::GetFigureType() { return figureType; }
 
 Color Figure::GetFigureColor() { return figureColor; }
+
+Cell::Cell() : cellColor(Color::WHITE), figure(), isEmpty(true) {}
+Cell::Cell(Color cellColor) : cellColor(cellColor), figure(), isEmpty(true) {}
+Cell::Cell(Color cellColor, Figure figure) : cellColor(cellColor), figure(figure), isEmpty(false) {}
+
+void Cell::PrintCell(int cellLine) {
+    if (!isEmpty && cellLine == (CELL_SIZE - 1) / 2) {
+        for (int i = 0; i < (CELL_SIZE - 1) / 2; ++i) {
+            PrintColorSquare(cellColor);
+        }
+        figure.PrintFigure();
+        for (int i = 0; i < (CELL_SIZE - 1) / 2; ++i) {
+            PrintColorSquare(cellColor);
+        }
+    } else {
+        for (int i = 0; i < CELL_SIZE; ++i) {
+            PrintColorSquare(cellColor);
+        }
+    }
+}
+
+void Cell::SetFigure(Figure figure) {
+    this->figure = figure;
+}
+
+Figure Cell::GetFigure() {
+    return figure;
+}
+
+Color Cell::GetCellColor() {
+    return cellColor;
+}
+
+Chess::Chess() {}
 
 void Chess::PrintBoard() {}
 
