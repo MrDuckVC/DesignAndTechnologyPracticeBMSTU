@@ -17,17 +17,27 @@ const int CELL_SIZE = 3;
 /**
  * @brief Цвета фигур, клеток и т.д.
  */
-enum class Color { WHITE, BLACK };
+enum class Color {
+    WHITE,
+    BLACK,
+};
 /**
  * @brief Класс шахматной фигуры (пешка, король и т.д.)
  */
-enum class FigureType { PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING };
+enum class FigureType {
+    PAWN,
+    KNIGHT,
+    BISHOP,
+    ROOK,
+    QUEEN,
+    KING,
+};
 
 /**
  * @brief Класс шахматной фигуры
  */
 class Figure {
-private:
+ private:
     /**
      * @brief Тип фигуры (пешка, король и т.д.)
      */
@@ -41,7 +51,7 @@ private:
      */
     int figureValue;
 
-public:
+ public:
     /**
      * @brief Создаёт фигуру `заглушку` (белая пешка)
      *
@@ -86,7 +96,7 @@ public:
  * @brief Класс клетки доски
  */
 class Cell {
-private:
+ private:
     /**
      * @brief Цвет клетки
      */
@@ -99,7 +109,8 @@ private:
      * @brief Пустая ли клетка
      */
     bool isEmpty;
-public:
+
+ public:
     /**
      * @brief Создаёт клетку по цвету
      *
@@ -147,7 +158,7 @@ public:
  * @brief Класс игры Шахматы
  */
 class Chess : public game::Game {
-private:
+ private:
     /**
      * @brief Шахматная доска
      */
@@ -157,7 +168,8 @@ private:
      * @brief Выводит доску на экран
      */
     void PrintBoard();
-public:
+
+ public:
     /**
      * @brief Создаёт доску с раставленными фигурами по умолчанию
      *
@@ -188,4 +200,4 @@ public:
      */
     const std::string GetLogoFile() override;
 };
-} // namespace chess
+}  // namespace chess

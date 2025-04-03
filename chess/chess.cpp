@@ -1,44 +1,44 @@
 #include "chess.h"
 
-#include <iostream>
 #include <iomanip>
+#include <iostream>
 #include <string>
 
 namespace {
 /// @name Символы для заполнения шахматного поля
 /// @{
-const std::string WHITE_SQUARE_SYMBOL = "█"; ///< Символ для белого квадрата
-const std::string BLACK_SQUARE_SYMBOL = " "; ///< Символ для чёрного квадрата
+const std::string WHITE_SQUARE_SYMBOL = "█";  ///< Символ для белого квадрата
+const std::string BLACK_SQUARE_SYMBOL = " ";  ///< Символ для чёрного квадрата
 /// @}
 
 /// @name Символы шахматных фигурок чёрного цвета.
 /// @{
-const std::string BLACK_PAWN_SYMBOL = "\u2659"; // Чёрная пешка, ♟
-const std::string BLACK_KNIGHT_SYMBOL = "\u2658"; // Чёрный конь, ♞
-const std::string BLACK_BISHOP_SYMBOL = "\u2657"; // Чёрный слон, ♝
-const std::string BLACK_ROOK_SYMBOL = "\u2656"; // Чёрная ладья, ♜
-const std::string BLACK_QUEEN_SYMBOL = "\u2655"; // Чёрная ферзь, ♛
-const std::string BLACK_KING_SYMBOL = "\u2654"; // Чёрный король, ♚
+const std::string BLACK_PAWN_SYMBOL = "\u2659";    // Чёрная пешка, ♟
+const std::string BLACK_KNIGHT_SYMBOL = "\u2658";  // Чёрный конь, ♞
+const std::string BLACK_BISHOP_SYMBOL = "\u2657";  // Чёрный слон, ♝
+const std::string BLACK_ROOK_SYMBOL = "\u2656";    // Чёрная ладья, ♜
+const std::string BLACK_QUEEN_SYMBOL = "\u2655";   // Чёрная ферзь, ♛
+const std::string BLACK_KING_SYMBOL = "\u2654";    // Чёрный король, ♚
 /// @}
 
 /// @name Символы шахматных фигурок белого цвета.
 /// @{
-const std::string WHITE_PAWN_SYMBOL = "\u265F"; // Белая пешка, ♙
-const std::string WHITE_KNIGHT_SYMBOL = "\u265E"; // Белый конь, ♘
-const std::string WHITE_BISHOP_SYMBOL = "\u265D"; // Белый слон, ♗
-const std::string WHITE_ROOK_SYMBOL = "\u265C"; // Белая ладья, ♖
-const std::string WHITE_QUEEN_SYMBOL = "\u265B"; // Белая ферзь, ♕
-const std::string WHITE_KING_SYMBOL = "\u265A"; // Белый король, ♔
+const std::string WHITE_PAWN_SYMBOL = "\u265F";    // Белая пешка, ♙
+const std::string WHITE_KNIGHT_SYMBOL = "\u265E";  // Белый конь, ♘
+const std::string WHITE_BISHOP_SYMBOL = "\u265D";  // Белый слон, ♗
+const std::string WHITE_ROOK_SYMBOL = "\u265C";    // Белая ладья, ♖
+const std::string WHITE_QUEEN_SYMBOL = "\u265B";   // Белая ферзь, ♕
+const std::string WHITE_KING_SYMBOL = "\u265A";    // Белый король, ♔
 /// @}
 
 /// @name Цена шахматных фигур.
 /// @{
-const int PAWN_VALUE = 1; ///< Цена пешки
-const int KNIGHT_VALUE = 3; ///< Цена коня
-const int BISHOP_VALUE = 3; ///< Цена слона
-const int ROOK_VALUE = 5; ///< Цена ладьи
-const int QUEEN_VALUE = 9; ///< Цена ферзя
-const int KING_VALUE = 0; ///< Цена короля
+const int PAWN_VALUE = 1;    ///< Цена пешки
+const int KNIGHT_VALUE = 3;  ///< Цена коня
+const int BISHOP_VALUE = 3;  ///< Цена слона
+const int ROOK_VALUE = 5;    ///< Цена ладьи
+const int QUEEN_VALUE = 9;   ///< Цена ферзя
+const int KING_VALUE = 0;    ///< Цена короля
 /// @}
 
 /**
@@ -53,95 +53,103 @@ void PrintColorSquare(chess::Color color) {
         std::cout << BLACK_SQUARE_SYMBOL << BLACK_SQUARE_SYMBOL;
     }
 }
-} // namespace
+}  // namespace
 
 namespace chess {
 Figure::Figure() : figureType(FigureType::PAWN), figureColor(Color::WHITE), figureValue(0) {};
 Figure::Figure(FigureType figureType, Color figureColor) : figureType(figureType), figureColor(figureColor) {
     switch (figureType) {
-    case FigureType::PAWN:
-        figureValue = PAWN_VALUE;
-        break;
-    case FigureType::KNIGHT:
-        figureValue = KNIGHT_VALUE;
-        break;
-    case FigureType::BISHOP:
-        figureValue = BISHOP_VALUE;
-        break;
-    case FigureType::ROOK:
-        figureValue = ROOK_VALUE;
-        break;
-    case FigureType::QUEEN:
-        figureValue = QUEEN_VALUE;
-        break;
-    case FigureType::KING:
-        figureValue = KING_VALUE;
-        break;
-    default:
-        throw std::invalid_argument("Uknown `FigureType` to set `figureValue`.");
-        break;
+        case FigureType::PAWN:
+            figureValue = PAWN_VALUE;
+            break;
+        case FigureType::KNIGHT:
+            figureValue = KNIGHT_VALUE;
+            break;
+        case FigureType::BISHOP:
+            figureValue = BISHOP_VALUE;
+            break;
+        case FigureType::ROOK:
+            figureValue = ROOK_VALUE;
+            break;
+        case FigureType::QUEEN:
+            figureValue = QUEEN_VALUE;
+            break;
+        case FigureType::KING:
+            figureValue = KING_VALUE;
+            break;
+        default:
+            throw std::invalid_argument("Uknown `FigureType` to set `figureValue`.");
+            break;
     }
 }
 
 void Figure::PrintFigure() {
     if (figureColor == Color::BLACK) {
         switch (figureType) {
-        case FigureType::PAWN:
-            std::cout << BLACK_PAWN_SYMBOL;
-            break;
-        case FigureType::KNIGHT:
-            std::cout << BLACK_KNIGHT_SYMBOL;
-            break;
-        case FigureType::BISHOP:
-            std::cout << BLACK_BISHOP_SYMBOL;
-            break;
-        case FigureType::ROOK:
-            std::cout << BLACK_ROOK_SYMBOL;
-            break;
-        case FigureType::QUEEN:
-            std::cout << BLACK_QUEEN_SYMBOL;
-            break;
-        case FigureType::KING:
-            std::cout << BLACK_KING_SYMBOL;
-            break;
-        default:
-            throw std::invalid_argument("Uknown `FigureType` to set `figureValue`.");
-            break;
+            case FigureType::PAWN:
+                std::cout << BLACK_PAWN_SYMBOL;
+                break;
+            case FigureType::KNIGHT:
+                std::cout << BLACK_KNIGHT_SYMBOL;
+                break;
+            case FigureType::BISHOP:
+                std::cout << BLACK_BISHOP_SYMBOL;
+                break;
+            case FigureType::ROOK:
+                std::cout << BLACK_ROOK_SYMBOL;
+                break;
+            case FigureType::QUEEN:
+                std::cout << BLACK_QUEEN_SYMBOL;
+                break;
+            case FigureType::KING:
+                std::cout << BLACK_KING_SYMBOL;
+                break;
+            default:
+                throw std::invalid_argument("Uknown `FigureType` to set `figureValue`.");
+                break;
         }
     } else if (figureColor == Color::WHITE) {
         switch (figureType) {
-        case FigureType::PAWN:
-            std::cout << WHITE_PAWN_SYMBOL;
-            break;
-        case FigureType::KNIGHT:
-            std::cout << WHITE_KNIGHT_SYMBOL;
-            break;
-        case FigureType::BISHOP:
-            std::cout << WHITE_BISHOP_SYMBOL;
-            break;
-        case FigureType::ROOK:
-            std::cout << WHITE_ROOK_SYMBOL;
-            break;
-        case FigureType::QUEEN:
-            std::cout << WHITE_QUEEN_SYMBOL;
-            break;
-        case FigureType::KING:
-            std::cout << WHITE_KING_SYMBOL;
-            break;
-        default:
-            throw std::invalid_argument("Uknown `FigureType` to set `figureValue`.");
-            break;
+            case FigureType::PAWN:
+                std::cout << WHITE_PAWN_SYMBOL;
+                break;
+            case FigureType::KNIGHT:
+                std::cout << WHITE_KNIGHT_SYMBOL;
+                break;
+            case FigureType::BISHOP:
+                std::cout << WHITE_BISHOP_SYMBOL;
+                break;
+            case FigureType::ROOK:
+                std::cout << WHITE_ROOK_SYMBOL;
+                break;
+            case FigureType::QUEEN:
+                std::cout << WHITE_QUEEN_SYMBOL;
+                break;
+            case FigureType::KING:
+                std::cout << WHITE_KING_SYMBOL;
+                break;
+            default:
+                throw std::invalid_argument("Uknown `FigureType` to set `figureValue`.");
+                break;
         }
     }
     std::cout << BLACK_SQUARE_SYMBOL;
 }
 
-int Figure::GetFigureValue() { return figureValue; }
-FigureType Figure::GetFigureType() { return figureType; }
-Color Figure::GetFigureColor() { return figureColor; }
+int Figure::GetFigureValue() {
+    return figureValue;
+}
+FigureType Figure::GetFigureType() {
+    return figureType;
+}
+Color Figure::GetFigureColor() {
+    return figureColor;
+}
 
-Cell::Cell(Color cellColor) : cellColor(cellColor), figure(), isEmpty(true) {}
-Cell::Cell(Color cellColor, Figure figure) : cellColor(cellColor), figure(figure), isEmpty(false) {}
+Cell::Cell(Color cellColor) : cellColor(cellColor), figure(), isEmpty(true) {
+}
+Cell::Cell(Color cellColor, Figure figure) : cellColor(cellColor), figure(figure), isEmpty(false) {
+}
 
 void Cell::PrintCell(int cellLine) {
     if (!isEmpty && ((CELL_SIZE - 1) / 2) == cellLine) {
@@ -225,7 +233,7 @@ void Chess::PrintBoard() {
     std::cout << "    ";
 
     // Печатаем строчку с буквенными координатами.
-    char letterCoord = 'a'; // Начальная буква для буквенных координат.
+    char letterCoord = 'a';  // Начальная буква для буквенных координат.
     for (int i = 0; i < BOARD_SIZE; ++i) {
         for (int j = 0; j < (CELL_SIZE - 1) / 2; ++j) {
             std::cout << "  ";
@@ -244,7 +252,8 @@ void Chess::PrintBoard() {
         for (int k = 0; k < CELL_SIZE; ++k) {
             // Печатаем численные координаты
             if (k == (CELL_SIZE - 1) / 2) {
-                // Функция std::setw(2) имеет параметр 2, так как программа расчитана что поле будет максимум 26х26 (т.е. не более 2 символов в номере).
+                // Функция std::setw(2) имеет параметр 2, так как программа расчитана что поле будет максимум 26х26 (т.е. не более 2 символов в
+                // номере).
                 std::cout << std::setw(2) << numCord;
             } else {
                 std::cout << "  ";  // Тут 2 пробела (чтобы не считали).
@@ -265,7 +274,9 @@ void Chess::Run() {
     // TODO
 }
 
-const std::string Chess::GetName() { return "Chess"; }
+const std::string Chess::GetName() {
+    return "Chess";
+}
 const std::string Chess::GetDescription() {
     return "Chess is an abstract strategy board game for two players which "
            "involves no hidden information and no elements of chance. It is "
@@ -279,5 +290,7 @@ const std::string Chess::GetDescription() {
            "\"checkmate\" (threaten with inescapable capture) the enemy king. "
            "There are also several ways a game can end in a draw.";
 }
-const std::string Chess::GetLogoFile() {return "./chess/chessLogo.txt";}
-} // namespace chess
+const std::string Chess::GetLogoFile() {
+    return "./chess/chessLogo.txt";
+}
+}  // namespace chess

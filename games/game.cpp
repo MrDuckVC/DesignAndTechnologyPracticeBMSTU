@@ -16,7 +16,6 @@ void Game::PrintLogo() {
     while (logoFile.get(ch)) {
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
         std::cout << ch;
-
     }
 
     logoFile.close();
