@@ -1,17 +1,26 @@
 #include "chess.h"
 
 #include <iostream>
+#include <iomanip>
+#include <string>
 
 namespace {
-const char WHITE_SQUARE = '█';
-const char BLACH_SQUARE = ' ';
+const std::string WHITE_SQUARE = "█";
+const std::string BLACK_SQUARE = " ";
 
-const char PAWN_SYMBOL = 'P';
-const char KNIGHT_SYMBOL = 'N';
-const char BISHOP_SYMBOL = 'B';
-const char ROOK_SYMBOL = 'R';
-const char QUEEN_SYMBOL = 'Q';
-const char KING_SYMBOL = 'K';
+const std::string BLACK_PAWN_SYMBOL = "\u2659";
+const std::string BLACK_KNIGHT_SYMBOL = "\u2658";
+const std::string BLACK_BISHOP_SYMBOL = "\u2657";
+const std::string BLACK_ROOK_SYMBOL = "\u2656";
+const std::string BLACK_QUEEN_SYMBOL = "\u2655";
+const std::string BLACK_KING_SYMBOL = "\u2654";
+
+const std::string WHITE_PAWN_SYMBOL = "\u265F";
+const std::string WHITE_KNIGHT_SYMBOL = "\u265E";
+const std::string WHITE_BISHOP_SYMBOL = "\u265D";
+const std::string WHITE_ROOK_SYMBOL = "\u265C";
+const std::string WHITE_QUEEN_SYMBOL = "\u265B";
+const std::string WHITE_KING_SYMBOL = "\u265A";
 
 const int PAWN_VALUE = 1;
 const int KNIGHT_VALUE = 3;
@@ -24,7 +33,7 @@ void PrintColorSquare(chess::Color color) {
     if (color == chess::Color::WHITE) {
         std::cout << WHITE_SQUARE << WHITE_SQUARE;
     } else {
-        std::cout << BLACH_SQUARE << BLACH_SQUARE;
+        std::cout << BLACK_SQUARE << BLACK_SQUARE;
     }
 }
 } // namespace
@@ -59,40 +68,56 @@ Figure::Figure(FigureType figureType, Color figureColor) : figureType(figureType
 }
 
 void Figure::PrintFigure() {
-    switch (figureColor) {
-    case Color::BLACK:
-        std::cout << BLACH_SQUARE;
-        break;
-    case Color::WHITE:
-        std::cout << WHITE_SQUARE;
-        break;
-    default:
-        throw std::invalid_argument("Uknown `Color` to print `Figure`.");
-        break;
+    if (figureColor == Color::BLACK) {
+        switch (figureType) {
+        case FigureType::PAWN:
+            std::cout << BLACK_PAWN_SYMBOL;
+            break;
+        case FigureType::KNIGHT:
+            std::cout << BLACK_KNIGHT_SYMBOL;
+            break;
+        case FigureType::BISHOP:
+            std::cout << BLACK_BISHOP_SYMBOL;
+            break;
+        case FigureType::ROOK:
+            std::cout << BLACK_ROOK_SYMBOL;
+            break;
+        case FigureType::QUEEN:
+            std::cout << BLACK_QUEEN_SYMBOL;
+            break;
+        case FigureType::KING:
+            std::cout << BLACK_KING_SYMBOL;
+            break;
+        default:
+            throw std::invalid_argument("Uknown `FigureType` to set `figureValue`.");
+            break;
+        }
+    } else if (figureColor == Color::WHITE) {
+        switch (figureType) {
+        case FigureType::PAWN:
+            std::cout << WHITE_PAWN_SYMBOL;
+            break;
+        case FigureType::KNIGHT:
+            std::cout << WHITE_KNIGHT_SYMBOL;
+            break;
+        case FigureType::BISHOP:
+            std::cout << WHITE_BISHOP_SYMBOL;
+            break;
+        case FigureType::ROOK:
+            std::cout << WHITE_ROOK_SYMBOL;
+            break;
+        case FigureType::QUEEN:
+            std::cout << WHITE_QUEEN_SYMBOL;
+            break;
+        case FigureType::KING:
+            std::cout << WHITE_KING_SYMBOL;
+            break;
+        default:
+            throw std::invalid_argument("Uknown `FigureType` to set `figureValue`.");
+            break;
+        }
     }
-    switch (figureType) {
-    case FigureType::PAWN:
-        std::cout << PAWN_SYMBOL;
-        break;
-    case FigureType::KNIGHT:
-        std::cout << KNIGHT_SYMBOL;
-        break;
-    case FigureType::BISHOP:
-        std::cout << BISHOP_SYMBOL;
-        break;
-    case FigureType::ROOK:
-        std::cout << ROOK_SYMBOL;
-        break;
-    case FigureType::QUEEN:
-        std::cout << QUEEN_SYMBOL;
-        break;
-    case FigureType::KING:
-        std::cout << KING_SYMBOL;
-        break;
-    default:
-        throw std::invalid_argument("Uknown `FigureType` to set `figureValue`.");
-        break;
-    }
+    std::cout << BLACK_SQUARE;
 }
 
 int Figure::GetFigureValue() { return figureValue; }
@@ -105,8 +130,13 @@ Cell::Cell() : cellColor(Color::WHITE), figure(), isEmpty(true) {}
 Cell::Cell(Color cellColor) : cellColor(cellColor), figure(), isEmpty(true) {}
 Cell::Cell(Color cellColor, Figure figure) : cellColor(cellColor), figure(figure), isEmpty(false) {}
 
+/**
+ * @brief Печатает строчку клетки по номеру строчки
+ *
+ * @param cellLine Номер строчки клетки, отчёт начинается с нуля
+ */
 void Cell::PrintCell(int cellLine) {
-    if (!isEmpty && cellLine == (CELL_SIZE - 1) / 2) {
+    if (!isEmpty && ((CELL_SIZE - 1) / 2) == cellLine) {
         for (int i = 0; i < (CELL_SIZE - 1) / 2; ++i) {
             PrintColorSquare(cellColor);
         }
@@ -123,6 +153,7 @@ void Cell::PrintCell(int cellLine) {
 
 void Cell::SetFigure(Figure figure) {
     this->figure = figure;
+    isEmpty = false;
 }
 
 Figure Cell::GetFigure() {
@@ -133,9 +164,97 @@ Color Cell::GetCellColor() {
     return cellColor;
 }
 
-Chess::Chess() {}
+Chess::Chess() {
+    // Раскрашиваю доску.
+    const Color colorForEvenCells = Color::WHITE;
+    const Color colorForNonEvenCells = Color::BLACK;
+    for (int i = 0; i < BOARD_SIZE; ++i) {
+        for (int j = 0; j < BOARD_SIZE; ++j) {
+            if ((i + j) % 2 == 0) {
+                desk[i][j] = Cell(colorForEvenCells);
+            } else {
+                desk[i][j] = Cell(colorForNonEvenCells);
+            }
+        }
+    }
 
-void Chess::PrintBoard() {}
+    // Белые фигуры на 1-2 линиях.
+    desk[0][0].SetFigure(Figure(FigureType::ROOK, Color::WHITE));
+    desk[0][1].SetFigure(Figure(FigureType::KNIGHT, Color::WHITE));
+    desk[0][2].SetFigure(Figure(FigureType::BISHOP, Color::WHITE));
+    desk[0][3].SetFigure(Figure(FigureType::QUEEN, Color::WHITE));
+    desk[0][4].SetFigure(Figure(FigureType::KING, Color::WHITE));
+    desk[0][5].SetFigure(Figure(FigureType::BISHOP, Color::WHITE));
+    desk[0][6].SetFigure(Figure(FigureType::KNIGHT, Color::WHITE));
+    desk[0][7].SetFigure(Figure(FigureType::ROOK, Color::WHITE));
+    for (int i = 0; i < 8; ++i) {
+        if (i % 2 == 0) {
+            desk[1][i].SetFigure(Figure(FigureType::PAWN, Color::WHITE));
+        } else {
+            desk[1][i].SetFigure(Figure(FigureType::PAWN, Color::WHITE));
+        }
+    }
+
+    // Чёрные фигуры на 7-8 линиях.
+    for (int i = 0; i < 8; ++i) {
+        if (i % 2 == 0) {
+            desk[6][i].SetFigure(Figure(FigureType::PAWN, Color::BLACK));
+        } else {
+            desk[6][i].SetFigure(Figure(FigureType::PAWN, Color::BLACK));
+        }
+    }
+    desk[7][0].SetFigure(Figure(FigureType::ROOK, Color::BLACK));
+    desk[7][1].SetFigure(Figure(FigureType::KNIGHT, Color::BLACK));
+    desk[7][2].SetFigure(Figure(FigureType::BISHOP, Color::BLACK));
+    desk[7][3].SetFigure(Figure(FigureType::QUEEN, Color::BLACK));
+    desk[7][4].SetFigure(Figure(FigureType::KING, Color::BLACK));
+    desk[7][5].SetFigure(Figure(FigureType::BISHOP, Color::BLACK));
+    desk[7][6].SetFigure(Figure(FigureType::KNIGHT, Color::BLACK));
+    desk[7][7].SetFigure(Figure(FigureType::ROOK, Color::BLACK));
+
+    PrintBoard();
+}
+
+void Chess::PrintBoard() {
+    // Пропускаем место для численных координат.
+    std::cout << "    ";
+
+    // Печатаем строчку с буквенными координатами.
+    char letterCoord = 'a'; // Начальная буква для буквенных координат.
+    for (int i = 0; i < BOARD_SIZE; ++i) {
+        for (int j = 0; j < (CELL_SIZE - 1) / 2; ++j) {
+            std::cout << "  ";
+        }
+        std::cout << letterCoord << ' ';
+        for (int j = 0; j < (CELL_SIZE - 1) / 2; ++j) {
+            std::cout << "  ";
+        }
+        letterCoord++;
+    }
+    std::cout << std::endl;
+
+    // Печатаем остальную часть.
+    int numCord = 1;
+    for (int i = 0; i < BOARD_SIZE; ++i) {
+        for (int k = 0; k < CELL_SIZE; ++k) {
+            // Печатаем численные координаты
+            if (k == (CELL_SIZE - 1) / 2) {
+                // Функция std::setw(2) имеет параметр 2, так как программа расчитана что поле будет максимум 26х26 (т.е. не более 2 символов в номере).
+                std::cout << std::setw(2) << numCord;
+            } else {
+                std::cout << "  ";  // Тут 2 пробела (чтобы не считали).
+            }
+            std::cout << "  ";  // Тут 2 пробела (чтобы не считали).
+
+            // Печатаем клеточки.
+            for (int j = 0; j < BOARD_SIZE; ++j) {
+                desk[i][j].PrintCell(k);
+            }
+            std::cout << std::endl;
+        }
+        numCord++;
+    }
+}
 
 void Chess::Run() {}
 

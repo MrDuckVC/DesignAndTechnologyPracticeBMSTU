@@ -3,7 +3,7 @@
 #include "../games/game.h"
 
 namespace chess {
-const int BOARD_SIZE = 8;
+const int BOARD_SIZE = 8; // Не более 26 (т.к. в английском алфавите 26 букв, и если привысить это число, то программа будет некоректно работать).
 const int CELL_SIZE = 3; // Количество строчек символов в ячейке
 
 enum class Color { WHITE, BLACK };
