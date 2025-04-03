@@ -15,6 +15,7 @@ private:
     int figureValue;
 
 public:
+    Figure(FigureType figureType, Color figureColor);
     void PrintFigure();
     int GetFigureValue();
     FigureType GetFigureType();
