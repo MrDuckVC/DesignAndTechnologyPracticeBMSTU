@@ -165,6 +165,19 @@ class Chess : public game::Game {
     Cell desk[BOARD_SIZE][BOARD_SIZE];
 
     /**
+     * @brief
+     */
+    void PrintLetterCoordinates();
+
+    /**
+     * @brief Выводит численныу координату в зависимости от строчки
+     *
+     * @param numberCord Численная координата
+     * @param cellLine Номер строчки клетки, отчёт начинается с нуля
+     */
+    void PrintNumberCoordinates(int numberCord, int cellLine);
+
+    /**
      * @brief Выводит доску на экран
      */
     void PrintBoard();

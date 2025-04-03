@@ -1,8 +1,10 @@
 #include "chess.h"
 
+#include <chrono>
 #include <iomanip>
 #include <iostream>
 #include <string>
+#include <thread>
 
 namespace {
 /// @name Символы для заполнения шахматного поля
@@ -52,6 +54,28 @@ void PrintColorSquare(chess::Color color) {
     } else {
         std::cout << BLACK_SQUARE_SYMBOL << BLACK_SQUARE_SYMBOL;
     }
+}
+
+/**
+ * @brief Задержка для вывода строчки (анимация вывода)
+ */
+void DelayToPrint() {
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+}
+
+/**
+ * @brief Вывести разделительную строку
+ */
+void PrintSeparator() {
+    std::cout << std::endl;
+    DelayToPrint();
+    for (int i = 0; i < (chess::BOARD_SIZE * chess::CELL_SIZE * 2) + 8; ++i) {
+        std::cout << '=';
+    }
+    DelayToPrint();
+    std::cout << std::endl;
+    DelayToPrint();
+    std::cout << std::endl;
 }
 }  // namespace
 
@@ -181,8 +205,8 @@ Color Cell::GetCellColor() {
 
 Chess::Chess() {
     // Раскрашиваю доску.
-    const Color colorForEvenCells = Color::WHITE;
-    const Color colorForNonEvenCells = Color::BLACK;
+    const Color colorForEvenCells = Color::BLACK;
+    const Color colorForNonEvenCells = Color::WHITE;
     for (int i = 0; i < BOARD_SIZE; ++i) {
         for (int j = 0; j < BOARD_SIZE; ++j) {
             if ((i + j) % 2 == 0) {
@@ -228,12 +252,12 @@ Chess::Chess() {
     desk[7][7].SetFigure(Figure(FigureType::ROOK, Color::BLACK));
 }
 
-void Chess::PrintBoard() {
+void Chess::PrintLetterCoordinates() {
     // Пропускаем место для численных координат.
     std::cout << "    ";
 
     // Печатаем строчку с буквенными координатами.
-    char letterCoord = 'a';  // Начальная буква для буквенных координат.
+    char letterCoord = 'A';  // Начальная буква для буквенных координат.
     for (int i = 0; i < BOARD_SIZE; ++i) {
         for (int j = 0; j < (CELL_SIZE - 1) / 2; ++j) {
             std::cout << "  ";
@@ -245,33 +269,49 @@ void Chess::PrintBoard() {
         letterCoord++;
     }
     std::cout << std::endl;
+    DelayToPrint();
+}
+
+void Chess::PrintNumberCoordinates(int numberCord, int cellLine) {
+    // Печатаем численные координаты
+    if (cellLine == (CELL_SIZE - 1) / 2) {
+        // Функция std::setw(2) имеет параметр 2, так как программа расчитана что поле будет максимум 26х26 (т.е. не более 2 символов в
+        // номере).
+        std::cout << std::setw(2) << numberCord;
+    } else {
+        std::cout << "  ";  // Тут 2 пробела (чтобы не считали).
+    }
+    std::cout << "  ";  // Тут 2 пробела (чтобы не считали).
+}
+
+void Chess::PrintBoard() {
+    PrintLetterCoordinates();
 
     // Печатаем остальную часть.
-    int numCord = 1;
-    for (int i = 0; i < BOARD_SIZE; ++i) {
+    int numCord = BOARD_SIZE;
+    for (int i = BOARD_SIZE - 1; i >= 0; --i) {
         for (int k = 0; k < CELL_SIZE; ++k) {
-            // Печатаем численные координаты
-            if (k == (CELL_SIZE - 1) / 2) {
-                // Функция std::setw(2) имеет параметр 2, так как программа расчитана что поле будет максимум 26х26 (т.е. не более 2 символов в
-                // номере).
-                std::cout << std::setw(2) << numCord;
-            } else {
-                std::cout << "  ";  // Тут 2 пробела (чтобы не считали).
-            }
-            std::cout << "  ";  // Тут 2 пробела (чтобы не считали).
+            PrintNumberCoordinates(numCord, k);
 
             // Печатаем клеточки.
             for (int j = 0; j < BOARD_SIZE; ++j) {
                 desk[i][j].PrintCell(k);
             }
+
+            PrintNumberCoordinates(numCord, k);
+
             std::cout << std::endl;
+            DelayToPrint();
         }
-        numCord++;
+        numCord--;
     }
+    PrintLetterCoordinates();
 }
 
 void Chess::Run() {
-    // TODO
+    PrintLogo();
+    PrintSeparator();
+    PrintBoard();
 }
 
 const std::string Chess::GetName() {
