@@ -54,17 +54,15 @@ class Game {
      */
     static void AddGame(Game* game);
     /**
-     * @brief Получает игру из статического массива
+     * @brief Удаляет игру из статического массива
      *
      * @param index Индекс игры
-     * @return Указатель на игру
      */
     static void RemoveGame(int index);
     /**
-     * @brief Получает игру из статического массива
+     * @brief Получает актуальное количество игр
      *
-     * @param index Индекс игры
-     * @return Указатель на игру
+     * @return Количество игр
      */
     static int GetGamesCount();
 };
