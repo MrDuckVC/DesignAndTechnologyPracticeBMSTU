@@ -28,18 +28,21 @@ class Figure {
     FigureType figureType;
     Color figureColor;
 
-    bool isSelected = false;
+    bool isSelected;
 
     sf::Sprite figureSprite;
+
  public:
     static std::map<std::pair<FigureType, Color>, sf::Texture> figureTextures;
     static sf::Texture LoadTexture(std::string pat);
 
     Figure(FigureType figureType = FigureType::PAWN, Color figureColor = Color::WHITE);
 
+    void SetIsSelected(bool selected);
     FigureType GetFigureType();
     Color GetFigureColor();
     sf::Sprite GetFigureSprite();
+    bool GetIsSelected();
     void SetFigureSpritePosition(float x, float y);
 };
 class Cell {
@@ -60,7 +63,7 @@ class Cell {
     void SetCellColor(Color color);
     void SetCellShapPosition(float x, float y);
     void MakeEmply();
-    Figure GetFigure();
+    Figure& GetFigure();
     Color GetCellColor();
     sf::RectangleShape GetCellShape();
     bool IsEmpty();
@@ -72,11 +75,13 @@ class Chess : public game::Game {
 
     void DrawBoard();
     void DrawFigures();
-    void PlaceFigures();
+
  public:
     Chess(sf::RenderWindow& window);
     void Run() override;
     const std::string GetName() override;
+
+    void Move(int oldN, int oldM, int newN, int newM);
 
     void draw();
 };
