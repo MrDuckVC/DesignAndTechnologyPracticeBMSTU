@@ -3,94 +3,6 @@
 namespace {}
 
 namespace chess {
-sf::Texture Figure::LoadTexture(std::string path) {
-    sf::Texture texture;
-    if (!texture.loadFromFile(path)) {
-        throw std::runtime_error("Failed to load figure texture");
-    }
-    return texture;
-}
-
-std::map<std::pair<FigureType, Color>, sf::Texture> Figure::figureTextures = {
-    {{FigureType::PAWN, Color::WHITE},   LoadTexture("assests/chess/pawn.png")   },
-    {{FigureType::PAWN, Color::BLACK},   LoadTexture("assests/chess/pawn1.png")  },
-    {{FigureType::KNIGHT, Color::WHITE}, LoadTexture("assests/chess/knight.png") },
-    {{FigureType::KNIGHT, Color::BLACK}, LoadTexture("assests/chess/knight1.png")},
-    {{FigureType::BISHOP, Color::WHITE}, LoadTexture("assests/chess/bishop.png") },
-    {{FigureType::BISHOP, Color::BLACK}, LoadTexture("assests/chess/bishop1.png")},
-    {{FigureType::ROOK, Color::WHITE},   LoadTexture("assests/chess/rook.png")   },
-    {{FigureType::ROOK, Color::BLACK},   LoadTexture("assests/chess/rook1.png")  },
-    {{FigureType::QUEEN, Color::WHITE},  LoadTexture("assests/chess/queen.png")  },
-    {{FigureType::QUEEN, Color::BLACK},  LoadTexture("assests/chess/queen1.png") },
-    {{FigureType::KING, Color::WHITE},   LoadTexture("assests/chess/king.png")   },
-    {{FigureType::KING, Color::BLACK},   LoadTexture("assests/chess/king1.png")  },
-};
-
-Figure::Figure(FigureType figureType, Color figureColor)
-    : figureType(figureType), figureColor(figureColor), figureSprite(Figure::figureTextures[{figureType, figureColor}]), isSelected(false) {
-    // figureSprite.setScale({(WINDOW_SIZE / static_cast<float>(Figure::figureTextures[{figureType, figureColor}].getSize().x)) / BOARD_SIZE,
-    //                        (WINDOW_SIZE / static_cast<float>(Figure::figureTextures[{figureType, figureColor}].getSize().y)) / BOARD_SIZE});
-    // figureSprite.setPosition({140, 20});
-}
-
-void Figure::SetIsSelected(bool selected) {
-    isSelected = selected;
-}
-FigureType Figure::GetFigureType() {
-    return figureType;
-}
-Color Figure::GetFigureColor() {
-    return figureColor;
-}
-sf::Sprite Figure::GetFigureSprite() {
-    return figureSprite;
-}
-bool Figure::GetIsSelected() {
-    return isSelected;
-}
-void Figure::SetFigureSpritePosition(float x, float y) {
-    figureSprite.setPosition({x, y});
-}
-
-void Cell::FillCellColor() {
-    cellShape.setFillColor(cellColor == Color::WHITE ? sf::Color(240, 195, 128) : sf::Color(109, 62, 23));
-}
-
-Cell::Cell(Color cellColor) : cellColor(cellColor), figure(), isEmpty(true) {
-    FillCellColor();
-}
-Cell::Cell(Color cellColor, Figure figure) : cellColor(cellColor), figure(figure), isEmpty(false) {
-    FillCellColor();
-}
-
-void Cell::SetFigure(Figure figure) {
-    this->figure = figure;
-    isEmpty = false;
-}
-void Cell::SetCellColor(Color color) {
-    cellColor = color;
-    FillCellColor();
-}
-void Cell::SetCellShapPosition(float x, float y) {
-    cellShape.setPosition({x, y});
-}
-void Cell::MakeEmply() {
-    this->figure = Figure();
-    isEmpty = true;
-}
-Figure& Cell::GetFigure() {
-    return figure;
-}
-Color Cell::GetCellColor() {
-    return cellColor;
-}
-sf::RectangleShape Cell::GetCellShape() {
-    return cellShape;
-}
-bool Cell::IsEmpty() {
-    return isEmpty;
-}
-
 void Chess::DrawBoard() {
     for (int i = 0; i < BOARD_SIZE; i++) {
         for (int j = 0; j < BOARD_SIZE; j++) {
@@ -106,7 +18,7 @@ void Chess::DrawFigures() {
                 Figure fig = desk[i][j].GetFigure();
                 sf::Sprite sprite = fig.GetFigureSprite();
                 sprite.setOrigin(sprite.getGlobalBounds().getCenter());
-                if (fig.GetIsSelected()) {
+                if (fig.IsSelected()) {
                     sprite.setPosition({static_cast<float>(sf::Mouse::getPosition(window).x), static_cast<float>(sf::Mouse::getPosition(window).y)});
                 } else {
                     sprite.setPosition(desk[i][j].GetCellShape().getGlobalBounds().getCenter());
@@ -117,12 +29,193 @@ void Chess::DrawFigures() {
         }
     }
 }
+void Chess::Draw() {
+    DrawBoard();
+    DrawFigures();
+}
 
-Chess::Chess(sf::RenderWindow& window) : Game(window) {
+
+void Chess::Move(int oldN, int oldM, int newN, int newM) {
+    // Check if coordinates are valid
+    if (oldN < 0 || oldN >= BOARD_SIZE || oldM < 0 || oldM >= BOARD_SIZE ||
+        newN < 0 || newN >= BOARD_SIZE || newM < 0 || newM >= BOARD_SIZE) {
+        return;
+    }
+
+    Cell &oldCell = desk[oldN][oldM];
+    Cell &newCell = desk[newN][newM];
+
+    // Check if there's a piece to move
+    if (oldCell.IsEmpty()) {
+        return;
+    }
+
+    Figure figureToMove = oldCell.GetFigure();
+
+    // Check if it's the player's turn
+    if (figureToMove.GetFigureColor() != whoseTurn) {
+        return;
+    }
+
+    // Check if destination has piece of same color
+    if (!newCell.IsEmpty() && newCell.GetFigure().GetFigureColor() == figureToMove.GetFigureColor()) {
+        return;
+    }
+
+    int direction = figureToMove.GetFigureColor() == Color::WHITE ? 1 : -1;
+    bool isValidMove = false;
+
+    switch (figureToMove.GetFigureType()) {
+        case FigureType::PAWN: {
+            // Basic pawn movement
+            if (newCell.IsEmpty()) {
+                // Single move forward
+                if (oldN == newN && oldM + direction == newM) {
+                    isValidMove = true;
+                }
+                // Double move from starting position
+                else if (oldN == newN && oldM + 2 * direction == newM &&
+                         figureToMove.GetMovesCount() == 0 &&
+                         desk[oldN][oldM + direction].IsEmpty()) {
+                    isValidMove = true;
+                }
+            }
+            // Capture
+            else {
+                if ((oldN + 1 == newN || oldN - 1 == newN) &&
+                    oldM + direction == newM) {
+                    isValidMove = true;
+                }
+            }
+            // TODO: Implement en passant
+            // TODO: Implement promotion
+            break;
+        }
+
+        case FigureType::KNIGHT: {
+            int dx = abs(newN - oldN);
+            int dy = abs(newM - oldM);
+            isValidMove = (dx == 2 && dy == 1) || (dx == 1 && dy == 2);
+            break;
+        }
+
+        case FigureType::BISHOP: {
+            if (abs(newN - oldN) == abs(newM - oldM)) {
+                isValidMove = true;
+                // Check if path is clear
+                int stepX = (newN > oldN) ? 1 : -1;
+                int stepY = (newM > oldM) ? 1 : -1;
+                for (int x = oldN + stepX, y = oldM + stepY;
+                     x != newN && y != newM;
+                     x += stepX, y += stepY) {
+                    if (!desk[x][y].IsEmpty()) {
+                        isValidMove = false;
+                        break;
+                    }
+                }
+            }
+            break;
+        }
+
+        case FigureType::ROOK: {
+            if ((newN == oldN && newM != oldM) || (newM == oldM && newN != oldN)) {
+                isValidMove = true;
+                // Check if path is clear
+                if (newN == oldN) {
+                    int step = (newM > oldM) ? 1 : -1;
+                    for (int y = oldM + step; y != newM; y += step) {
+                        if (!desk[oldN][y].IsEmpty()) {
+                            isValidMove = false;
+                            break;
+                        }
+                    }
+                } else {
+                    int step = (newN > oldN) ? 1 : -1;
+                    for (int x = oldN + step; x != newN; x += step) {
+                        if (!desk[x][oldM].IsEmpty()) {
+                            isValidMove = false;
+                            break;
+                        }
+                    }
+                }
+            }
+            break;
+        }
+
+        case FigureType::QUEEN: {
+            // Like bishop or rook
+            if (abs(newN - oldN) == abs(newM - oldM)) {
+                // Bishop move
+                isValidMove = true;
+                int stepX = (newN > oldN) ? 1 : -1;
+                int stepY = (newM > oldM) ? 1 : -1;
+                for (int x = oldN + stepX, y = oldM + stepY;
+                     x != newN && y != newM;
+                     x += stepX, y += stepY) {
+                    if (!desk[x][y].IsEmpty()) {
+                        isValidMove = false;
+                        break;
+                    }
+                }
+            }
+            else if ((newN == oldN && newM != oldM) || (newM == oldM && newN != oldN)) {
+                // Rook move
+                isValidMove = true;
+                if (newN == oldN) {
+                    int step = (newM > oldM) ? 1 : -1;
+                    for (int y = oldM + step; y != newM; y += step) {
+                        if (!desk[oldN][y].IsEmpty()) {
+                            isValidMove = false;
+                            break;
+                        }
+                    }
+                } else {
+                    int step = (newN > oldN) ? 1 : -1;
+                    for (int x = oldN + step; x != newN; x += step) {
+                        if (!desk[x][oldM].IsEmpty()) {
+                            isValidMove = false;
+                            break;
+                        }
+                    }
+                }
+            }
+            break;
+        }
+
+        case FigureType::KING: {
+            // Regular king move
+            if (abs(newN - oldN) <= 1 && abs(newM - oldM) <= 1) {
+                isValidMove = true;
+            }
+            // TODO: Implement castling
+            break;
+        }
+
+        default:
+            throw std::runtime_error("Unknown figure type");
+    }
+
+    if (!isValidMove) {
+        return;
+    }
+
+    // Check if move puts king in check
+    // TODO: Implement check detection
+
+    // Execute the move
+    newCell.SetFigure(oldCell.GetFigure());
+    oldCell.MakeEmpty();
+    newCell.GetFigure().CountOneMove();
+
+    // Switch turn
+    whoseTurn = (whoseTurn == Color::WHITE) ? Color::BLACK : Color::WHITE;
+}
+
+Chess::Chess(sf::RenderWindow& window) : Game(window), whoseTurn(Color::WHITE) {
     // Растановка клеток.
     for (int i = 0; i < BOARD_SIZE; i++) {
         for (int j = 0; j < BOARD_SIZE; j++) {
-            desk[i][j].SetCellShapPosition(i * (WINDOW_SIZE / BOARD_SIZE), j * (WINDOW_SIZE / BOARD_SIZE));
+            desk[i][j].GetCellShape().setPosition({static_cast<float>(i * (WINDOW_SIZE / BOARD_SIZE)), static_cast<float>(j * (WINDOW_SIZE / BOARD_SIZE))});
         }
     }
 
@@ -200,7 +293,7 @@ void Chess::Run() {
                 int newM = -1;
                 for (int i = 0; i < BOARD_SIZE; i++) {
                     for (int j = 0; j < BOARD_SIZE; j++) {
-                        if (desk[i][j].GetFigure().GetIsSelected()) {
+                        if (desk[i][j].GetFigure().IsSelected()) {
                             oldN = i;
                             oldM = j;
                             desk[i][j].GetFigure().SetIsSelected(false);
@@ -217,7 +310,7 @@ void Chess::Run() {
 
         window.clear();
 
-        draw();
+        Draw();
 
         window.display();
     }
@@ -225,22 +318,5 @@ void Chess::Run() {
 
 const std::string Chess::GetName() {
     return "Chess";
-}
-
-void Chess::Move(int oldN, int oldM, int newN, int newM) {
-    if (!desk[newN][newM].IsEmpty() || desk[oldN][oldM].IsEmpty()) {
-        return;
-    }
-    if (oldN < 0 || oldN >= BOARD_SIZE || oldM < 0 || oldM >= BOARD_SIZE || newN < 0 || newN >= BOARD_SIZE || newM < 0 || newM >= BOARD_SIZE) {
-        return;
-    }
-
-    desk[newN][newM].SetFigure(desk[oldN][oldM].GetFigure());
-    desk[oldN][oldM].MakeEmply();
-}
-
-void Chess::draw() {
-    DrawBoard();
-    DrawFigures();
 }
 }  // namespace chess
