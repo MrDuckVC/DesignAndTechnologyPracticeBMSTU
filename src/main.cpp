@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "menu/menu.h"
+#include "chess/chess.h"
 
 int main() {
     sf::RenderWindow window(sf::VideoMode({1000, 1000}), "Games", sf::Style::Close | sf::Style::Titlebar);
@@ -8,7 +9,10 @@ int main() {
 
     menu::Menu menu(window);
 
-    menu.addOption("Test game1", []() { std::cout << "Test game1" << std::endl; });
+    menu.addOption("Chess", [&window]() {
+        chess::Chess chessGame(window);
+        chessGame.Run();
+    });
     menu.addOption("Test game2", []() { std::cout << "Test game2" << std::endl; });
     menu.addOption("Exit", [&window]() { window.close(); });
 
