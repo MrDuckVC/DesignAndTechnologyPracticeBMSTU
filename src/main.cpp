@@ -1,0 +1,34 @@
+#include <SFML/Graphics.hpp>
+#include <iostream>
+#include "menu/menu.h"
+
+int main() {
+    sf::RenderWindow window(sf::VideoMode({1000, 1000}), "Games", sf::Style::Close | sf::Style::Titlebar);
+    window.setFramerateLimit(240);
+
+    menu::Menu menu(window);
+
+    menu.addOption("Test game1", []() { std::cout << "Test game1" << std::endl; });
+    menu.addOption("Test game2", []() { std::cout << "Test game2" << std::endl; });
+    menu.addOption("Exit", [&window]() { window.close(); });
+
+    while (window.isOpen()) {
+        while (const std::optional event = window.pollEvent()) {
+            if (event->is<sf::Event::Closed>()) {
+                window.close();
+            } else if (event->is<sf::Event::Resized>()) {
+                window.setSize({1000, 1000});
+            }
+
+            menu.handleEvents(*event);
+        }
+
+        window.clear();
+
+        menu.draw();
+
+        window.display();
+    }
+
+    return 0;
+}

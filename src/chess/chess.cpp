@@ -312,6 +312,8 @@ void Chess::Run() {
     PrintLogo();
     PrintSeparator();
     PrintBoard();
+    // std::cout << "\033[2J";
+    // std::cout << "\033[1;1H";
 }
 
 const std::string Chess::GetName() {
