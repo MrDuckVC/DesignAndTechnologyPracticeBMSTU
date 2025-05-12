@@ -1,9 +1,9 @@
 #pragma once
 
 #include "SFML/Graphics.hpp"
-#include "untils.h"
 #include "conf.h"
 #include "figure.h"
+#include "untils.h"
 
 namespace chess {
 
@@ -14,8 +14,6 @@ class Cell {
     bool isEmpty;
 
     sf::RectangleShape cellShape = sf::RectangleShape({static_cast<float>(WINDOW_SIZE) / BOARD_SIZE, static_cast<float>(WINDOW_SIZE) / BOARD_SIZE});
-
-    void FillCellColor();
  public:
     Cell(Color cellColor = Color::WHITE);
 
@@ -26,6 +24,8 @@ class Cell {
     void SetCellColor(Color color);
     void SetFigure(Figure figure);
     void MakeEmpty();
+
+    void FillCellColor();
 };
 
 }  // namespace chess

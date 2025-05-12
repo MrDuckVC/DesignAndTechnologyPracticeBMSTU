@@ -1,11 +1,6 @@
 #include "cell.h"
 
 namespace chess {
-
-void Cell::FillCellColor() {
-    cellShape.setFillColor(cellColor == Color::WHITE ? WHITE_CELL_COLOR : BLACK_CELL_COLOR);
-}
-
 Cell::Cell(Color cellColor) : cellColor(cellColor), figure(), isEmpty(true) {
     FillCellColor();
 }
@@ -33,6 +28,10 @@ void Cell::SetFigure(Figure figure) {
 void Cell::MakeEmpty() {
     this->isEmpty = true;
     this->figure = Figure();
+}
+
+void Cell::FillCellColor() {
+    cellShape.setFillColor(cellColor == Color::WHITE ? WHITE_CELL_COLOR : BLACK_CELL_COLOR);
 }
 
 }  // namespace chess

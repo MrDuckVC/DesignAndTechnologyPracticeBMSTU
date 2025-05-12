@@ -8,6 +8,10 @@ const int WINDOW_SIZE = 1000;
 
 const sf::Color WHITE_CELL_COLOR = sf::Color(240, 195, 128);
 const sf::Color BLACK_CELL_COLOR = sf::Color(109, 62, 23);
+const sf::Color SELECTED_FIGURE_CELL_COLOR = sf::Color(68, 117, 69);
+const sf::Color CAN_MOVE_TO_CELL_COLOR = sf::Color(104, 179, 105);
+const sf::Color CANT_MOVE_FIGURE_CELL_COLOR = sf::Color(117, 35, 18);
+const sf::Color CAN_ATTACK_CELL_COLOR = sf::Color(44, 77, 45);
 
 const std::string WHITE_PAWN_IMAGE_PATH = "assests/chess/pawn.png";
 const std::string BLACK_PAWN_IMAGE_PATH = "assests/chess/pawn1.png";
