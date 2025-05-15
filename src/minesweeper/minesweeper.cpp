@@ -8,22 +8,16 @@ void Minesweeper::CreateWindow()
 void Minesweeper::RenderAll()
 {
 	window.clear(screenBgColor);
-	// controller->Render();
+	playState.Render();
 	window.display();
 }
 
-Minesweeper::Minesweeper(sf::RenderWindow& window) : Game(window)
+Minesweeper::Minesweeper(sf::RenderWindow& window) : Game(window), playState(PlayState(window))
 {
 	screenBgColor = Color(20, 20, 20, 225);
 	screenSize.size.x = 600;
 	screenSize.size.y = 675;
 	CreateWindow();
-	// controller = new StateController(window);
-}
-
-Minesweeper::~Minesweeper()
-{
-	// delete controller;
 }
 
 void Minesweeper::Run()
@@ -43,6 +37,7 @@ void Minesweeper::Run()
 				}
 			}
 		}
+		playState.Update();
 		RenderAll();
 	}
 }
