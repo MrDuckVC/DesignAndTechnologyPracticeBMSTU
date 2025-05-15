@@ -1,6 +1,7 @@
 #pragma once
 
-#include "MainMenu.hpp"
+#include "PlayState.hpp"
+#include "Button.hpp"
 
 class StateController
 {

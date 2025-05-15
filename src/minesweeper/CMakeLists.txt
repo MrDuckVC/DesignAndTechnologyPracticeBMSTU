@@ -5,9 +5,9 @@ project(${project})
 
 set(CMAKE_CXX_STANDARD 17)
 
-set(${project}_SOURCES Board.cpp Button.cpp minesweeper.cpp MainMenu.cpp PlayState.cpp StateController.cpp States.cpp Tile.cpp)
+set(${project}_SOURCES Board.cpp Button.cpp minesweeper.cpp PlayState.cpp StateController.cpp States.cpp Tile.cpp)
 
-set(${project}_HEADERS Board.hpp Button.hpp minesweeper.hpp MainMenu.hpp PlayState.hpp StateController.hpp States.hpp Tile.hpp)
+set(${project}_HEADERS Board.hpp Button.hpp minesweeper.hpp PlayState.hpp StateController.hpp States.hpp Tile.hpp)
 
 set(${project}_SOURCE_LIST ${${project}_SOURCES} ${${project}_HEADERS})
 

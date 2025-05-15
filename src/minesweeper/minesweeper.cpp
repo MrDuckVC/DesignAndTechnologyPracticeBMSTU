@@ -5,22 +5,10 @@ void Minesweeper::CreateWindow()
 {
 }
 
-void Minesweeper::UpdateAll()
-{
-	while (const std::optional event = window.pollEvent())
-	{
-		if (event->is<sf::Event::Closed>() || Keyboard::isKeyPressed(Keyboard::Key::Escape))
-		{
-			window.close();
-		}
-	}
-	controller->Update();
-}
-
 void Minesweeper::RenderAll()
 {
 	window.clear(screenBgColor);
-	controller->Render();
+	// controller->Render();
 	window.display();
 }
 
@@ -30,19 +18,31 @@ Minesweeper::Minesweeper(sf::RenderWindow& window) : Game(window)
 	screenSize.size.x = 600;
 	screenSize.size.y = 675;
 	CreateWindow();
-	controller = new StateController(window);
+	// controller = new StateController(window);
 }
 
 Minesweeper::~Minesweeper()
 {
-	delete controller;
+	// delete controller;
 }
 
 void Minesweeper::Run()
 {
 	while(window.isOpen())
 	{
-		UpdateAll();
+		while (const std::optional event = window.pollEvent()) {
+			if (event->is<sf::Event::Closed>()) {
+				window.close();
+			} else if (const sf::Event::KeyPressed* keyPressed = event->getIf<sf::Event::KeyPressed>()) {  // Если нажата клавиша
+				switch (keyPressed->scancode) {
+					case (sf::Keyboard::Scancode::Escape):  // Если нажата клавиша Escape
+						return;
+						break;
+					default:
+						break;
+				}
+			}
+		}
 		RenderAll();
 	}
 }

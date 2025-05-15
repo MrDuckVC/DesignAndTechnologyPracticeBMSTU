@@ -2,7 +2,7 @@
 
 StateController::StateController(RenderWindow& window)
 {
-	states.push(new MainMenu(window));
+	// states.push(new MainMenu(window));
 }
 
 StateController::~StateController()
