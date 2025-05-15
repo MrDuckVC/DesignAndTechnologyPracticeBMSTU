@@ -9,7 +9,7 @@
 class PlayState : public States
 {
 private:
-	// Game Area
+	// Minesweeper Area
 	Vector2f borderOffset;
 	RectangleShape gameArea;
 	void CreateGameArea();
@@ -45,7 +45,7 @@ private:
 	void CheckForMouseHover(Vector2i mousePos);
 	void CheckExitState();
 public:
-	PlayState(RenderWindow* window);
+	PlayState(RenderWindow& window);
 	virtual ~PlayState();
 	void MoveToNextState(std::stack<States*>* states);
 	void Update();

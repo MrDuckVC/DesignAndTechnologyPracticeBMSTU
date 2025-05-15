@@ -36,7 +36,7 @@ void Tile::SetAdjacent(int count)
 	ss << adjacentCount;
 	number.setString(ss.str());
 
-	font.openFromFile("Assets/Fonts/static/Orbitron-Black.ttf");
+	font.openFromFile("assests/Fonts/static/Orbitron-Black.ttf");
 	number.setFont(font);
 	number.setFillColor(Color::White);
 	number.setPosition(Vector2f(
@@ -103,22 +103,22 @@ int Tile::GetAdjacentCount()
 	return adjacentCount;
 }
 
-void Tile::Render(RenderWindow* window)
+void Tile::Render(RenderWindow& window)
 {
-	window->draw(tile);
+	window.draw(tile);
 	if (isRevealed)
 	{
 		if (isBomb)
 		{
-			window->draw(mineSprite);
+			window.draw(mineSprite);
 		}
 		else if (adjacentCount > 0)
 		{
-			window->draw(number);
+			window.draw(number);
 		}
 	}
 	if (isMarked)
 	{
-		window->draw(flagSprite);
+		window.draw(flagSprite);
 	}
 }

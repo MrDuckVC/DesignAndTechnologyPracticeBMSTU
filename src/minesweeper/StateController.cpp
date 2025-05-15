@@ -1,6 +1,6 @@
 #include "StateController.hpp"
 
-StateController::StateController(RenderWindow* window)
+StateController::StateController(RenderWindow& window)
 {
 	states.push(new MainMenu(window));
 }

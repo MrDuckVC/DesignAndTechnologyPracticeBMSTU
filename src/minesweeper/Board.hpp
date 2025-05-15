@@ -43,5 +43,5 @@ public:
 	bool IsLoss();
 	bool IsWin();
 	int GetRemainingBombs();
-	void RenderBoard(RenderWindow* window);
+	void RenderBoard(RenderWindow& window);
 };

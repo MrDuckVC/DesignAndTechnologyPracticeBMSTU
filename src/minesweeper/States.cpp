@@ -1,8 +1,7 @@
 #include "States.hpp"
 
-States::States(RenderWindow* window)
+States::States(RenderWindow& window) : window(window)
 {
-	this->window = window;
 	ResetState();
 }
 

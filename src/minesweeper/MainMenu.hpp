@@ -23,7 +23,7 @@ private:
 	void MouseInput();
 
 public:
-	MainMenu(RenderWindow* window);
+	MainMenu(RenderWindow& window);
 	virtual ~MainMenu();
 
 	void MoveToNextState(std::stack<States*>* states);

@@ -3,7 +3,7 @@
 
 Button::Button(std::string name, Color color, float size) : buttonText(font, name, static_cast<unsigned int>(size))
 {
-    if (!font.openFromFile("Assets/Fonts/static/Orbitron-Regular.ttf"))
+    if (!font.openFromFile("assests/Fonts/static/Orbitron-Regular.ttf"))
     {
        std::cerr << "Error\n";
     }
@@ -54,7 +54,7 @@ Vector2f Button::GetPosition()
 	return buttonText.getPosition();
 }
 
-void Button::Render(RenderWindow* window)
+void Button::Render(RenderWindow& window)
 {
-	window->draw(buttonText);
+	window.draw(buttonText);
 }

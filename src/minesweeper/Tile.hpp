@@ -2,8 +2,8 @@
 #include <SFML/Graphics.hpp>
 #include <sstream>
 
-#define FLAG "Assets/Sprites/flag.png"
-#define BOMB "Assets/Sprites/mine.png"
+#define FLAG "assests/Sprites/flag.png"
+#define BOMB "assests/Sprites/mine.png"
 
 using namespace sf;
 
@@ -13,10 +13,10 @@ private:
 	RectangleShape tile;
 	bool isBomb;
 	bool isBlasted;
-	
+
 	bool isRevealed;
 	bool isMarked;
-	
+
 	int adjacentCount;
 
 	Color outline;
@@ -24,7 +24,7 @@ private:
 	Color reveal;
 	Color blasted;
 	Color marked;
-	
+
 	Font font;
 	Text number;
 	Texture flagTexture;
@@ -46,5 +46,5 @@ public:
 
 	bool IsRevealed();
 	bool Reveal(bool clicked);
-	void Render(RenderWindow* window);
+	void Render(RenderWindow& window);
 };

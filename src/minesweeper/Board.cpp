@@ -235,7 +235,7 @@ int Board::GetRemainingBombs()
 	return bombRemaining;
 }
 
-void Board::RenderBoard(RenderWindow* window)
+void Board::RenderBoard(RenderWindow& window)
 {
 	for(int i = 0; i < tileCount.x; ++i)
 	{

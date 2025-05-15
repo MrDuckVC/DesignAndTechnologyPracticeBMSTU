@@ -7,11 +7,11 @@ using namespace sf;
 class States
 {
 protected:
-	RenderWindow* window;
+	RenderWindow &window;
 	bool quitState;
 	bool playState;
 public:
-	States(RenderWindow* window);
+	States(RenderWindow& window);
 	bool IsQuitState();
 	bool IsPlayState();
 	void ResetState();

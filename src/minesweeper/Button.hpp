@@ -27,5 +27,5 @@ public:
 	Vector2f GetBounds();
 	Vector2f GetPosition();
 
-	void Render(RenderWindow* window);
+	void Render(RenderWindow& window);
 };
