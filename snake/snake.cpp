@@ -1,6 +1,8 @@
 #include "snake.h"
 
+#include <atomic>
 #include <iostream>
+#include <mutex>
 #include <thread>
 #include <vector>
 
@@ -13,7 +15,7 @@ using namespace std;
 namespace {
 /// @name Состояние игры
 /// @{
-bool gameOver = false;  // состояние игры
+atomic<bool> gameOver(false);
 /// @}
 
 /// @name Параметры доски
@@ -37,6 +39,8 @@ enum eDirection {
 
 eDirection dir;  // направление змейки
 
+mutex mtx;
+
 // Функция ввода
 void setupConsole() {
     termios term;
@@ -56,6 +60,10 @@ char Snake::getInput() {
         return buf;
     }
     return '_';
+}
+
+void clearScreen() {
+    cout << "\033[2J\033[1;1H";
 }
 
 // Генерация еды, чтобы она не попала на змею
@@ -91,6 +99,9 @@ void Snake::setup() {
 }
 
 void Snake::draw() {
+    lock_guard<mutex> lock(mtx);
+    clearScreen();
+
     // Верхняя граница
     for (int i = 0; i < width + 2; i++) {
         cout << "#";
@@ -209,6 +220,30 @@ void Snake::logic() {
             y++;
             break;
         }
+    }
+
+    // Проверка столкновений
+    if (x < 0 || x >= width || y < 0 || y >= height) {
+        gameOver = true;
+        return;
+    }
+
+    for (auto& t : body) {
+        if (x == t.first && y == t.second) {
+            gameOver = true;
+            return;
+        }
+    }
+
+    // Поедание еды
+    if (x == fruitX && y == fruitY) {
+        score += 10;
+        if (prevBody.empty()) {
+            body.push_back(prevHead);
+        } else {
+            body.push_back(prevBody.back());
+        }
+        generateFood();
     }
 }
 
