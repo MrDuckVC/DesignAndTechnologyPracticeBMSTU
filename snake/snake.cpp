@@ -1,50 +1,56 @@
 #include "snake.h"
 
 #include <iostream>
-#include <vector>
 #include <thread>
+#include <vector>
 
+#include <fcntl.h>
 #include <termios.h>
 #include <unistd.h>
-#include <fcntl.h>
 
 using namespace std;
 
 namespace {
 /// @name Состояние игры
 /// @{
-bool gameOver = false; // состояние игры
+bool gameOver = false;  // состояние игры
 /// @}
 
 /// @name Параметры доски
 /// @{
-const int width = 30; // ширина доски
-const int height = 20; // высота доски
+const int width = 30;   // ширина доски
+const int height = 20;  // высота доски
 /// @}
 
-int x, y, fruitX, fruitY, score; // координаты головы, координаты фрукта, итоговый результат
-vector<pair<int, int>> body; // координаты каждого элемента тела, кроме головы
+int x, y, fruitX, fruitY, score;  // координаты головы, координаты фрукта, итоговый результат
+vector<pair<int, int>> body;      // координаты каждого элемента тела, кроме головы
 
 /// @name Направление
-enum eDirection { STOP, LEFT, RIGHT, UP, DOWN }; // перечисление направлений
+enum eDirection {
+    STOP,
+    LEFT,
+    RIGHT,
+    UP,
+    DOWN
+};  // перечисление направлений
 /// @}
 
-eDirection dir; // направление змейки
+eDirection dir;  // направление змейки
 
 // Функция ввода
 void setupConsole() {
-  termios term;
-  tcgetattr(0, &term); // Настройки терминала по умолчанию
-  term.c_lflag &= ~(ICANON | ECHO);
-  tcsetattr(0, 0, &term);
-  fcntl(0, F_SETFL, O_NONBLOCK);
+    termios term;
+    tcgetattr(0, &term);  // Настройки терминала по умолчанию
+    term.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(0, 0, &term);
+    fcntl(0, F_SETFL, O_NONBLOCK);
 }
-}
+}  // namespace
 
 namespace snake {
 
 // Получение нажатой клавиши
-char getInput() {
+char Snake::getInput() {
     char buf = '_';
     if (read(0, &buf, 1) > 0) {
         return buf;
@@ -53,7 +59,7 @@ char getInput() {
 }
 
 // Генерация еды, чтобы она не попала на змею
-void generateFood() {
+void Snake::generateFood() {
     bool onSnake = false;
     do {
         onSnake = false;
@@ -73,7 +79,7 @@ void generateFood() {
     } while (onSnake);
 }
 
-void setup() {
+void Snake::setup() {
     gameOver = false;
     dir = STOP;
     x = width / 2;
@@ -84,16 +90,16 @@ void setup() {
     setupConsole();
 }
 
-void draw() {
+void Snake::draw() {
     // Верхняя граница
-    for (int i = 0; i < width+2; i++) {
+    for (int i = 0; i < width + 2; i++) {
         cout << "#";
     }
     cout << endl;
 
     // Основное поле
     for (int i = 0; i < height; i++) {
-        for (int j = 0; j < width+2; j++) {
+        for (int j = 0; j < width + 2; j++) {
             if (j == 0) {
                 cout << "#";
                 continue;
@@ -103,14 +109,14 @@ void draw() {
             if (i == y && j == x) {
                 cout << "O";
                 continue;
-            }
-            else for (pair<int, int> t : body) {
-                if (t.first == j && t.second == i) {
-                    cout << "o";
-                    isSnake = true;
-                    break;
+            } else
+                for (pair<int, int> t : body) {
+                    if (t.first == j && t.second == i) {
+                        cout << "o";
+                        isSnake = true;
+                        break;
+                    }
                 }
-            }
 
             if (isSnake) {
                 continue;
@@ -121,7 +127,7 @@ void draw() {
                 continue;
             }
 
-            if (j == width+1) {
+            if (j == width + 1) {
                 cout << "#";
                 continue;
             }
@@ -132,14 +138,14 @@ void draw() {
     }
 
     // Нижняя граница
-    for (int i = 0; i < width+2; i++) {
+    for (int i = 0; i < width + 2; i++) {
         cout << "#";
     }
     cout << endl;
     cout << "Score: " << score << endl;
 }
 
-void input() {
+void Snake::input() {
     char key = getInput();
     if (key != '_') {
         switch (tolower(key)) {
@@ -175,7 +181,7 @@ void input() {
     }
 }
 
-void logic() {
+void Snake::logic() {
     pair<int, int> prevHead = {x, y};
     vector<pair<int, int>> prevBody = body;
 
@@ -206,11 +212,11 @@ void logic() {
     }
 }
 
-int Run() {
-    srand(time(0)); //Устанавливает начальное значение для генератора случайных чисел
-    setup(); //Инициализация и настройка начальных условий
+void Snake::Run() {
+    srand(time(0));  // Устанавливает начальное значение для генератора случайных чисел
+    setup();         // Инициализация и настройка начальных условий
 
-    thread inputThread([](){ // Отдельный поток для ввода
+    thread inputThread([&]() {  // Отдельный поток для ввода
         while (!gameOver) {
             input();
             this_thread::sleep_for(chrono::milliseconds(10));
@@ -218,16 +224,28 @@ int Run() {
     });
 
     while (!gameOver) {
-        draw(); // Отрисовка поля
-        logic(); // Работа игры
+        draw();   // Отрисовка поля
+        logic();  // Работа игры
         this_thread::sleep_for(chrono::milliseconds(150));
     }
 
-    inputThread.join(); // Объединение потоков
+    inputThread.join();  // Объединение потоков
 
-    system("stty sane"); // Возвращение терминала к первоначальным настройкам
+    system("stty sane");  // Возвращение терминала к первоначальным настройкам
     cout << "Game Over! Final Score: " << score << endl;
-    return 0;
 }
 
-} // namespace chess
+const std::string Snake::GetName() {
+    return "Snake";
+}
+const std::string Snake::GetDescription() {
+    return "Snake is a classic arcade game where the player controls a growing snake that moves around the screen, collecting food (usually an apple "
+           "or dot) to increase its length. The goal is to avoid hitting the walls or the snake's own body, as this ends the game. With each piece "
+           "of food eaten, the snake grows longer, making navigation increasingly challenging. The game tests reflexes and strategy, as players must "
+           "plan their moves carefully to survive as long as possible. Simple yet addictive, Snake remains a popular and timeless mobile and "
+           "computer game.";
+}
+const std::string Snake::GetLogoFile() {
+    return "";
+}
+}  // namespace snake

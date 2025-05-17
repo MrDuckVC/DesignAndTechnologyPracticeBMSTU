@@ -4,14 +4,32 @@
 
 namespace snake {
 class Snake : public game::Game {
-  public:
+ private:
+    /**
+     * @brief Получение нажатой клавиши
+     */
+    char getInput();
 
-  void Run() override;
+    /**
+     * @brief Генерация еды, чтобы она не попала на змею
+     */
+    void generateFood();
 
-  const std::string GetName() override;
+    void setup();
 
-  const std::string GetDescription() override;
+    void draw();
 
-  const std::string GetLogoFile() override;
+    void input();
+
+    void logic();
+
+ public:
+    void Run() override;
+
+    const std::string GetName() override;
+
+    const std::string GetDescription() override;
+
+    const std::string GetLogoFile() override;
 };
-}
+}  // namespace snake
