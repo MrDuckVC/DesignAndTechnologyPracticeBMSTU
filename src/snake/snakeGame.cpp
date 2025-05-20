@@ -2,7 +2,7 @@
 
 #include "snakeGame.h"
 
-SnakeGame::SnakeGame(sf::RenderWindow& window) : Game(window), tileLength0(20) {
+SnakeGame::SnakeGame(sf::RenderWindow& window) : Game(window), tileLength0(window.getSize().x / 10) {
     // Размеры окна должны обязательно нацело делитья на длину плитки
     window.setVerticalSyncEnabled(true);
 
