@@ -11,7 +11,7 @@ FoodSpawner::FoodSpawner(Field* field, sf::Texture* texture) : field0(field) {
     std::random_device rd;
     gen0 = new std::mt19937(rd());
 
-    foodUnit0.setSize({field0->getTileLength(), field0->getTileLength()});
+    foodUnit0.setSize({static_cast<float>(field0->getTileLength()), static_cast<float>(field0->getTileLength())});
     foodUnit0.setTexture(texture);
 
     respawn();
@@ -37,5 +37,5 @@ void FoodSpawner::respawn() {
     xPos = field0->normalizeHorizontalPos(yPos, xPos);
 
     // Перемещаем еду в новую позицию
-    foodUnit0.setPosition({xPos, yPos});
+    foodUnit0.setPosition({static_cast<float>(xPos), static_cast<float>(yPos)});
 }

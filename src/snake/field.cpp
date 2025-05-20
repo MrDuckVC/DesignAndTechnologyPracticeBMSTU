@@ -11,7 +11,7 @@ Field::Position Field::normalizePosition(int x, int y) const {
 
 // Конструктор поля
 Field::Field(int width, int height, int tileLength, sf::Texture* texture) : width0(width), height0(height), tileLength0(tileLength) {
-    fieldRect0.setSize({width0 * tileLength0, height0 * tileLength0});
+    fieldRect0.setSize({static_cast<float>(width0 * tileLength0), static_cast<float>(height0 * tileLength0)});
 
     texture->setRepeated(true);
 
