@@ -13,6 +13,14 @@ Orientation::dirNum Orientation::fromKeyToDir(sf::Keyboard::Scancode key) {
     return Orientation::Up;
   case sf::Keyboard::Scancode::S:
     return Orientation::Down;
+  case sf::Keyboard::Scancode::Left:
+    return Orientation::Left;
+  case sf::Keyboard::Scancode::Right:
+    return Orientation::Right;
+  case sf::Keyboard::Scancode::Up:
+    return Orientation::Up;
+  case sf::Keyboard::Scancode::Down:
+    return Orientation::Down;
   default:
     return Orientation::Stop;
   }
