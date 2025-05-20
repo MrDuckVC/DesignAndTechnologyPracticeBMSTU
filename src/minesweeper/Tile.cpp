@@ -4,8 +4,9 @@ Texture Tile::flagTexture;
 Texture Tile::mineTexture;
 
 void Tile::LoadTexture() {
-	Tile::flagTexture.loadFromFile(FLAG);
-	Tile::mineTexture.loadFromFile(BOMB);
+	if (!Tile::flagTexture.loadFromFile(FLAG) || !Tile::mineTexture.loadFromFile(BOMB)) {
+        throw std::runtime_error("Failed to load minesweeper textures");
+	}
 }
 
 Tile::Tile() : number(font), flagSprite(flagTexture), mineSprite(mineTexture)
