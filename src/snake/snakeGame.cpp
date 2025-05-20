@@ -2,16 +2,16 @@
 
 #include "snakeGame.h"
 
-snakeGame::snakeGame(sf::RenderWindow *window) : window0(window), tileLength0(20) {
+SnakeGame::SnakeGame(sf::RenderWindow& window) : Game(window), tileLength0(20) {
   // Размеры окна должны обязательно нацело делитья на длину плитки
-  window0->setVerticalSyncEnabled(true);
+  window.setVerticalSyncEnabled(true);
 
   // Загрузка тексктуры поля
   textures0[0] = new sf::Texture();
   textures0[0]->loadFromFile("assets/snake/field.png");
 
-  int normalizedWidth = window0->getSize().x / tileLength0;
-  int normalizedHeight = window0->getSize().y / tileLength0;
+  int normalizedWidth = window.getSize().x / tileLength0;
+  int normalizedHeight = window.getSize().y / tileLength0;
 
   field0 = new Field(normalizedWidth, normalizedHeight, tileLength0,
                          textures0[0]);
@@ -29,7 +29,7 @@ snakeGame::snakeGame(sf::RenderWindow *window) : window0(window), tileLength0(20
   snake0 = new Snake(field0, textures0[2]);
 }
 
-snakeGame::~snakeGame() {
+SnakeGame::~SnakeGame() {
   delete snake0;
   delete food0;
   delete field0;
@@ -38,29 +38,29 @@ snakeGame::~snakeGame() {
     delete pointer;
 }
 
-void snakeGame::loop() {
+void SnakeGame::loop() {
   Orientation::dirNum directionNow = Orientation::Stop;
 
-  while (window0->isOpen()) {
+  while (window.isOpen()) {
     // Обработка события нажатия
-    while (auto ev = window0->pollEvent()) {
+    while (auto ev = window.pollEvent()) {
       if (ev->is<sf::Event::Closed>())
-        window0->close();
+        window.close();
       if (auto *kp = ev->getIf<sf::Event::KeyPressed>()) {
         if (kp->scancode == sf::Keyboard::Scancode::Escape)
-          window0->close();
+          window.close();
         directionNow = Orientation::fromKeyToDir(kp->scancode);
       }
     }
 
     if (endOfGame != true) {
-      window0->clear();
+      window.clear();
 
       snake0->update(directionNow, food0->getCurrentPos());
       if (snake0->isFoodEaten()) {
         food0->respawn();
         score0++;
-        window0->setTitle(std::string("Snake | Score: ") +
+        window.setTitle(std::string("Snake | Score: ") +
                           std::to_string(score0));
       }
 
@@ -71,14 +71,14 @@ void snakeGame::loop() {
         endOfGame = true;
       }
 
-      window0->draw(*field0->getRectToDraw());
+      window.draw(*field0->getRectToDraw());
 
       for (auto drawable : snake0->getRectsToDraw())
-        window0->draw(*drawable);
+        window.draw(*drawable);
 
-      window0->draw(*food0->getRectToDraw());
+      window.draw(*food0->getRectToDraw());
 
-      window0->display();
+      window.display();
     }
   }
 }

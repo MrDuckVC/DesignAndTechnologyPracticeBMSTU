@@ -3,9 +3,10 @@
 #include "foodSpawner.h"
 #include "snake.h"
 
-class snakeGame {
+#include "../games/game.h"
+
+class SnakeGame : public game::Game {
 private:
-  sf::RenderWindow *window0;
   sf::Texture *textures0[3]; // 0 - field, 1 - food, 2 - snake
 
   Field *field0;
@@ -19,8 +20,8 @@ private:
 	bool endOfGame = false;
 
 public:
-  snakeGame(sf::RenderWindow *window);
-  ~snakeGame();
+  SnakeGame(sf::RenderWindow& window);
+  ~SnakeGame();
 
   void loop();
 };

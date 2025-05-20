@@ -5,9 +5,9 @@ project(${project})
 
 set(CMAKE_CXX_STANDARD 17)
 
-set(${project}_SOURCES orientation.cpp foodSpawner.cpp game.cpp field.cpp segment.cpp snake.cpp)
+set(${project}_SOURCES orientation.cpp foodSpawner.cpp snakeGame.cpp field.cpp segment.cpp snake.cpp)
 
-set(${project}_HEADERS orientation.h foodSpawner.h game.h field.h segment.h snake.h)
+set(${project}_HEADERS orientation.h foodSpawner.h snakeGame.h field.h segment.h snake.h)
 
 set(${project}_SOURCE_LIST ${${project}_SOURCES} ${${project}_HEADERS})
 
