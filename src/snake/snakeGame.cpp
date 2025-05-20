@@ -1,8 +1,8 @@
 #include <iostream>
 
-#include "game.h"
+#include "snakeGame.h"
 
-Game::Game(sf::RenderWindow *window) : window0(window), tileLength0(20) {
+snakeGame::snakeGame(sf::RenderWindow *window) : window0(window), tileLength0(20) {
   // Размеры окна должны обязательно нацело делитья на длину плитки
   window0->setVerticalSyncEnabled(true);
 
@@ -29,7 +29,7 @@ Game::Game(sf::RenderWindow *window) : window0(window), tileLength0(20) {
   snake0 = new Snake(field0, textures0[2]);
 }
 
-Game::~Game() {
+snakeGame::~snakeGame() {
   delete snake0;
   delete food0;
   delete field0;
@@ -38,7 +38,7 @@ Game::~Game() {
     delete pointer;
 }
 
-void Game::loop() {
+void snakeGame::loop() {
   Orientation::dirNum directionNow = Orientation::Stop;
 
   while (window0->isOpen()) {
