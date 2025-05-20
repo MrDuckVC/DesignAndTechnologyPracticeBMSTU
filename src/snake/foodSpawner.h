@@ -5,22 +5,22 @@
 #include "field.h"
 
 class FoodSpawner {
-private:
-  int getRand(int maxNum) const;
+ private:
+    int getRand(int maxNum) const;
 
-  std::mt19937 *gen0;
+    std::mt19937* gen0;
 
-  Field *field0;
+    Field* field0;
 
-  sf::RectangleShape foodUnit0;
+    sf::RectangleShape foodUnit0;
 
-public:
-  FoodSpawner(Field *field, sf::Texture *texture);
-  ~FoodSpawner();
+ public:
+    FoodSpawner(Field* field, sf::Texture* texture);
+    ~FoodSpawner();
 
-  sf::Vector2f getCurrentPos() const { return foodUnit0.getPosition(); }
+    sf::Vector2f getCurrentPos() const { return foodUnit0.getPosition(); }
 
-  sf::Drawable *getRectToDraw() const { return (sf::Drawable *)&foodUnit0; }
+    sf::Drawable* getRectToDraw() const { return (sf::Drawable*)&foodUnit0; }
 
-  void respawn();
+    void respawn();
 };
