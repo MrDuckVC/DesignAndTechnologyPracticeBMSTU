@@ -6,7 +6,9 @@ PlayState::PlayState(RenderWindow& window) : States(window), timeText(font), bom
 	borderOffset = Vector2f(20.f, 20.f);
 	isGameStart = false;
 	showPopup = false;
-	font.openFromFile("assests/Fonts/static/Orbitron-Regular.ttf");
+	if (!font.openFromFile("assests/Fonts/static/Orbitron-Regular.ttf")) {
+        throw std::runtime_error("Failed to load minesweeper font");
+	}
 	CreateGameArea();
 	CreateButtons();
 	ResetGame();
