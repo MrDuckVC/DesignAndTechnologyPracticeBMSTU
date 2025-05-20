@@ -41,10 +41,13 @@ private:
 	void HidePopup();
 	// Mouse
 	bool isGameStart;
+	bool isMouseClicked;
+	// void CheckForMouseReleased();
 	void CheckForMouseClick(Vector2i mousePos);
 	void CheckForMouseHover(Vector2i mousePos);
 	void CheckExitState();
 public:
+	bool isGameQuit = false;
 	PlayState(RenderWindow& window);
 	virtual ~PlayState();
 	void MoveToNextState(std::stack<States*>* states);

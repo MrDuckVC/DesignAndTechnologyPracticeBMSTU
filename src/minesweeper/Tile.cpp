@@ -1,5 +1,13 @@
 #include "Tile.hpp"
 
+Texture Tile::flagTexture;
+Texture Tile::mineTexture;
+
+void Tile::LoadTexture() {
+	Tile::flagTexture.loadFromFile(FLAG);
+	Tile::mineTexture.loadFromFile(BOMB);
+}
+
 Tile::Tile() : number(font), flagSprite(flagTexture), mineSprite(mineTexture)
 {
 	outline = Color(100, 100, 100, 255);
@@ -36,7 +44,11 @@ void Tile::SetAdjacent(int count)
 	ss << adjacentCount;
 	number.setString(ss.str());
 
-	font.openFromFile("assests/Fonts/static/Orbitron-Black.ttf");
+
+	if (!font.openFromFile("assests/Fonts/static/Orbitron-Black.ttf")) {
+        throw std::runtime_error("Failed to load figure texture");
+    }
+
 	number.setFont(font);
 	number.setFillColor(Color::White);
 	number.setPosition(Vector2f(
@@ -47,7 +59,7 @@ void Tile::SetAdjacent(int count)
 void Tile::SetBomb()
 {
 	isBomb = true;
-	mineTexture.loadFromFile(BOMB);
+	// mineTexture.loadFromFile(BOMB);
 	mineSprite.setTexture(mineTexture);
 	mineSprite.setPosition(tile.getPosition() + Vector2f(10.f, 10.f));
 }
@@ -65,7 +77,7 @@ int Tile::Mark()
 	isMarked = !isMarked;
 	if (isMarked) {
 		tile.setFillColor(marked);
-		flagTexture.loadFromFile(FLAG);
+		// flagTexture.loadFromFile(FLAG);
 		flagSprite.setTexture(flagTexture);
 		flagSprite.setPosition(tile.getPosition() + Vector2f(15.f, 10.f));
 	}

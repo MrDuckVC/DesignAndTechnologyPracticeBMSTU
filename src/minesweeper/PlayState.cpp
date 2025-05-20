@@ -2,7 +2,7 @@
 
 PlayState::PlayState(RenderWindow& window) : States(window), timeText(font), bombText(font), PopupText(font)
 {
-	std::cout << "Starting Play State" << std::endl;
+	Tile::LoadTexture();
 	borderOffset = Vector2f(20.f, 20.f);
 	isGameStart = false;
 	showPopup = false;
@@ -88,7 +88,7 @@ void PlayState::UpdateBomb()
 
 void PlayState::UpdateTime()
 {
-	if (!isGameStart) { return; }
+	if (!isGameStart || isGameQuit) { return; }
 
 	if (timer.getElapsedTime().asSeconds() > 1)
 	{
@@ -143,7 +143,6 @@ PlayState::~PlayState()
 	delete resetButton;
 	delete restartButton;
 	delete quitButton;
-	std::cout << "Exiting PlayState\n";
 }
 
 void PlayState::MoveToNextState(std::stack<States*>* states)
@@ -159,11 +158,11 @@ void PlayState::PlayGame(bool isLeftClick, bool isRightClick, Vector2i mousePos)
 		timer.restart();
 	}
 
-	if (isLeftClick)
+	if (isLeftClick && !isMouseClicked)
 	{
 		board.LeftButton(mousePos);
 	}
-	if (isRightClick)
+	if (isRightClick && !isMouseClicked)
 	{
 		board.RightButton(mousePos);
 	}
@@ -192,7 +191,7 @@ void PlayState::CheckForMouseClick(Vector2i mousePos)
 		}
 		else if (quitButton->IsPressed(window) && isLeftClick)
 		{
-			window.close();
+			isGameQuit = true;
 		}
 	}
 	else
@@ -206,6 +205,7 @@ void PlayState::CheckForMouseClick(Vector2i mousePos)
 			PlayGame(isLeftClick, isRightClick, mousePos);
 		}
 	}
+	isMouseClicked = isLeftClick || isRightClick;
 }
 
 void PlayState::CheckForMouseHover(Vector2i mousePos)
@@ -225,7 +225,7 @@ void PlayState::CheckExitState()
 {
 	if (Keyboard::isKeyPressed(Keyboard::Key::Escape))
 	{
-		window.close();
+		isGameQuit = true;
 	}
 }
 

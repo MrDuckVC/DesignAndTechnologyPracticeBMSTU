@@ -3,6 +3,7 @@
 namespace minesweeper {
 void Minesweeper::CreateWindow()
 {
+	window.setSize({screenSize.size.x, screenSize.size.y});
 }
 
 void Minesweeper::RenderAll()
@@ -15,8 +16,8 @@ void Minesweeper::RenderAll()
 Minesweeper::Minesweeper(sf::RenderWindow& window) : Game(window), playState(PlayState(window))
 {
 	screenBgColor = Color(20, 20, 20, 225);
-	screenSize.size.x = 600;
-	screenSize.size.y = 675;
+	screenSize.size.x = 1000;
+	screenSize.size.y = 1000;
 	CreateWindow();
 }
 
@@ -30,7 +31,7 @@ void Minesweeper::Run()
 			} else if (const sf::Event::KeyPressed* keyPressed = event->getIf<sf::Event::KeyPressed>()) {  // Если нажата клавиша
 				switch (keyPressed->scancode) {
 					case (sf::Keyboard::Scancode::Escape):  // Если нажата клавиша Escape
-						return;
+						playState.isGameQuit = true;
 						break;
 					default:
 						break;
@@ -39,6 +40,7 @@ void Minesweeper::Run()
 		}
 		playState.Update();
 		RenderAll();
+		if (playState.isGameQuit) {return;}
 	}
 }
 

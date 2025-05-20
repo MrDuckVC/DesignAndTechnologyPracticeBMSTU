@@ -114,7 +114,6 @@ Vector2i Board::FindTileIndex(Vector2i mousePos)
 	mousePos.x /= static_cast<int>(tileSize.x);
 	mousePos.y /= static_cast<int>(tileSize.y);
 
-	std::cout << mousePos.x << ", " << mousePos.y << std::endl;
 	return mousePos;
 }
 

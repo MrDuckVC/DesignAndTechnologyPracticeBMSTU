@@ -27,11 +27,13 @@ private:
 
 	Font font;
 	Text number;
-	Texture flagTexture;
-	Texture mineTexture;
+	static Texture flagTexture;
+	static Texture mineTexture;
 	Sprite mineSprite;
 	Sprite flagSprite;
 public:
+	static void LoadTexture();
+
 	Tile();
 
 	void CreateTile(Vector2f pos, Vector2f size);
@@ -47,4 +49,6 @@ public:
 	bool IsRevealed();
 	bool Reveal(bool clicked);
 	void Render(RenderWindow& window);
+
+
 };

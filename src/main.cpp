@@ -14,11 +14,11 @@ int main() {
         chess::Chess chessGame(window);
         chessGame.Run();
     });
-    menu.addOption("minesweeper", [&window]() {
+    menu.addOption("Minesweeper", [&window]() {
         minesweeper::Minesweeper minesweeperGame(window);
         minesweeperGame.Run();
     });
-    menu.addOption("Test game2", []() { std::cout << "Test game2" << std::endl; });
+    menu.addOption("Test game3", []() { std::cout << "Test game2" << std::endl; });
     menu.addOption("Exit", [&window]() { window.close(); });
 
     while (window.isOpen()) {
@@ -26,7 +26,7 @@ int main() {
             if (event->is<sf::Event::Closed>()) {
                 window.close();
             } else if (event->is<sf::Event::Resized>()) {
-                window.setSize({1000, 1000});
+                window.setSize({800, 800});
             }
 
             menu.handleEvents(*event);
