@@ -46,7 +46,7 @@ void Tile::SetAdjacent(int count)
 
 
 	if (!font.openFromFile("assests/Fonts/static/Orbitron-Black.ttf")) {
-        throw std::runtime_error("Failed to load figure texture");
+        throw std::runtime_error("Failed to load minesweeper font");
     }
 
 	number.setFont(font);
