@@ -66,6 +66,7 @@ void Menu::handleEvents(const sf::Event& event) {
         for (std::pair<sf::Text, std::function<void()>>& option : options) {
             if (option.first.getGlobalBounds().contains(mousePos)) {  // Если мышь над текстом
                 option.second();                                      // Выполняем действие
+                window.setTitle("Game");
             }
         }
     } else if (const sf::Event::KeyPressed* keyPressed = event.getIf<sf::Event::KeyPressed>()) {  // Если нажата клавиша
