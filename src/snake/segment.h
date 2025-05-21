@@ -17,21 +17,21 @@ class Segment {
     Segment(sf::Vector2f pos, float size, Segment::Type type, Orientation::dirNum direction = Orientation::Stop);
     Segment(const Segment& segment);
 
-    const Segment::Type& getType() const { return type0; }
+    const Segment::Type& getType() const;
     Segment& setType(Segment::Type other);
 
-    const Orientation::dirNum& getDirection() const { return direction0; }
+    const Orientation::dirNum& getDirection() const;
     Segment& setDirection(Orientation::dirNum other);
 
     sf::Vector2f position() const;
     Segment& setPosition(const sf::Vector2f& pos);
 
-    const float getDegrees() const { return rect0.getRotation().asDegrees(); }
+    const float getDegrees() const;
     Segment& setRotation(float degrees0);
 
     Segment& setTexture(sf::Texture* texture);
 
-    const sf::Drawable* getRectToDraw() const { return &rect0; }
+    const sf::Drawable* getRectToDraw() const;
 
  private:
     float centre0;

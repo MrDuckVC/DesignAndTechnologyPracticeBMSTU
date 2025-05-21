@@ -76,14 +76,13 @@ int Snake::getCorner(Orientation::dirNum dir1, Orientation::dirNum dir2) const {
 }
 
 bool Snake::isPosOnSnake(sf::Vector2f pos) const {
-    for (auto segm : segmentList0)
+    for (Segment* segm : segmentList0)
         if (pos == segm->position())
             return true;
     return false;
 }
 
-Snake::Snake(Field* field, sf::Texture* textures, float speed)
-    : field0(field), tileLength0(field0->getTileLength()), speed0(speed), textures0(textures) {
+Snake::Snake(Field* field, sf::Texture* textures) : field0(field), tileLength0(field0->getTileLength()), textures0(textures) {
     timer0 = sf::Clock();
 
     // Голова
@@ -112,7 +111,7 @@ Snake::Snake(Field* field, sf::Texture* textures, float speed)
 }
 
 Snake::~Snake() {
-    for (auto pointer : segmentList0)
+    for (Segment* pointer : segmentList0)
         delete pointer;
 }
 
@@ -191,9 +190,17 @@ void Snake::update(Orientation::dirNum direction, sf::Vector2f foodPos) {
     }
 }
 
+bool Snake::isFoodEaten() const {
+    return isFoodEaten0;
+}
+
+bool Snake::isDead() const {
+    return isDead0;
+}
+
 const std::vector<const sf::Drawable*> Snake::getRectsToDraw() const {
     std::vector<const sf::Drawable*> vect;
-    for (auto segment : segmentList0)
+    for (Segment* segment : segmentList0)
         vect.push_back(segment->getRectToDraw());
 
     return vect;

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "const.h"
 #include "foodSpawner.h"
 #include "snake.h"
 

@@ -18,9 +18,9 @@ class FoodSpawner {
     FoodSpawner(Field* field, sf::Texture* texture);
     ~FoodSpawner();
 
-    sf::Vector2f getCurrentPos() const { return foodUnit0.getPosition(); }
+    sf::Vector2f getCurrentPos() const;
 
-    sf::Drawable* getRectToDraw() const { return (sf::Drawable*)&foodUnit0; }
+    sf::Drawable* getRectToDraw() const;
 
     void respawn();
 };

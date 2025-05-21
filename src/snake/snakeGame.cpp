@@ -6,31 +6,21 @@ SnakeGame::SnakeGame(sf::RenderWindow& window) : Game(window), tileLength0(windo
     // Размеры окна должны обязательно нацело делитья на длину плитки
     window.setVerticalSyncEnabled(true);
 
-    // Загрузка тексктуры поля
+    // Загрузка тексктур поля, еды и змейки
     textures0[0] = new sf::Texture();
-    if (!textures0[0]->loadFromFile("assests/snake/field.png")) {
+    textures0[1] = new sf::Texture();
+    textures0[2] = new sf::Texture();
+    if (!textures0[0]->loadFromFile(snake::PATH_FIELD) || !textures0[1]->loadFromFile(snake::PATH_FOOD) ||
+        !textures0[2]->loadFromFile(snake::PATH_SNAKE)) {
         throw std::runtime_error("Failed to load field texture.");
     }
 
+    // Подсчет количества клеток
     int normalizedWidth = window.getSize().x / tileLength0;
     int normalizedHeight = window.getSize().y / tileLength0;
 
     field0 = new Field(normalizedWidth, normalizedHeight, tileLength0, textures0[0]);
-
-    // Загрузка текстуры еды
-    textures0[1] = new sf::Texture();
-    if (!textures0[1]->loadFromFile("assests/snake/food.png")) {
-        throw std::runtime_error("Failed to load field texture.");
-    }
-
     food0 = new FoodSpawner(field0, textures0[1]);
-
-    // Загрузка текстуры змейки
-    textures0[2] = new sf::Texture();
-    if (!textures0[2]->loadFromFile("assests/snake/snake.png")) {
-        throw std::runtime_error("Failed to load field texture.");
-    }
-
     snake0 = new Snake(field0, textures0[2]);
 }
 
@@ -39,7 +29,7 @@ SnakeGame::~SnakeGame() {
     delete food0;
     delete field0;
 
-    for (auto pointer : textures0)
+    for (sf::Texture* pointer : textures0)
         delete pointer;
 }
 
@@ -48,10 +38,10 @@ void SnakeGame::Run() {
 
     while (window.isOpen()) {
         // Обработка события нажатия
-        while (auto ev = window.pollEvent()) {
+        while (std::optional<sf::Event> ev = window.pollEvent()) {
             if (ev->is<sf::Event::Closed>())
                 window.close();
-            if (auto* kp = ev->getIf<sf::Event::KeyPressed>()) {
+            if (const sf::Event::KeyPressed* kp = ev->getIf<sf::Event::KeyPressed>()) {
                 if (kp->scancode == sf::Keyboard::Scancode::Escape)
                     return;
                 directionNow = Orientation::fromKeyToDir(kp->scancode);
@@ -74,7 +64,7 @@ void SnakeGame::Run() {
 
             window.draw(*field0->getRectToDraw());
 
-            for (auto drawable : snake0->getRectsToDraw())
+            for (const sf::Drawable* drawable : snake0->getRectsToDraw())
                 window.draw(*drawable);
 
             window.draw(*food0->getRectToDraw());

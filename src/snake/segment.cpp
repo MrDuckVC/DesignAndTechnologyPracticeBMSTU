@@ -21,10 +21,18 @@ Segment::Segment(const Segment& segment) {
     direction0 = segment.getDirection();
 }
 
+const Segment::Type& Segment::getType() const {
+    return type0;
+}
+
 Segment& Segment::setType(Segment::Type other) {
     type0 = other;
     updateTextureRect();
     return *this;
+}
+
+const Orientation::dirNum& Segment::getDirection() const {
+    return direction0;
 }
 
 Segment& Segment::setDirection(Orientation::dirNum other) {
@@ -43,6 +51,10 @@ Segment& Segment::setPosition(const sf::Vector2f& pos) {
     return *this;
 }
 
+const float Segment::getDegrees() const {
+    return rect0.getRotation().asDegrees();
+}
+
 // Установить угол наклона
 Segment& Segment::setRotation(float degrees0) {
     rect0.setRotation(sf::degrees(degrees0));
@@ -54,6 +66,10 @@ Segment& Segment::setTexture(sf::Texture* texture) {
     textureSegmentWidth0 = texture->getSize().x / 2;
     updateTextureRect();
     return *this;
+}
+
+const sf::Drawable* Segment::getRectToDraw() const {
+    return &rect0;
 }
 
 void Segment::updateTextureRect() {

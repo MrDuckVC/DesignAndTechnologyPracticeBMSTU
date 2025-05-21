@@ -4,6 +4,7 @@
 
 #include "field.h"
 #include "segment.h"
+#include "const.h"
 
 class Snake {
  private:
@@ -18,7 +19,7 @@ class Snake {
 
     Field* field0;
     float tileLength0;
-    float speed0;
+    float speed0 = snake::defaultSpeed;
 
     sf::Texture* textures0;
 
@@ -29,12 +30,12 @@ class Snake {
     bool isDead0{false};
 
  public:
-    Snake(Field* field, sf::Texture* textures, float speed = 0.3);
+    Snake(Field* field, sf::Texture* textures);
     ~Snake();
 
     void update(Orientation::dirNum direction, sf::Vector2f foodPos);
-    bool isFoodEaten() const { return isFoodEaten0; }
-    bool isDead() const { return isDead0; }
+    bool isFoodEaten() const;
+    bool isDead() const;
 
     const std::vector<const sf::Drawable*> getRectsToDraw() const;
 };

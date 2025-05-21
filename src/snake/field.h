@@ -20,11 +20,10 @@ class Field {
 
  public:
     Field(int width, int height, int tileLength, sf::Texture* texture);
-    ~Field();
 
-    int getTileLength() { return tileLength0; }
-    int getWidth() { return width0; }
-    int getHeight() { return height0; }
+    int getTileLength();
+    int getWidth();
+    int getHeight();
 
     void setBlock(int x, int y);
     void removeBlock(int x, int y);
@@ -38,5 +37,5 @@ class Field {
 
     bool isPosInField(int x, int y) const;
 
-    sf::Drawable* getRectToDraw() const { return (sf::Drawable*)&fieldRect0; };
+    sf::Drawable* getRectToDraw() const;
 };

@@ -32,7 +32,16 @@ Field::Field(int width, int height, int tileLength, sf::Texture* texture) : widt
         matrixCountFree0[i] = 0;
 }
 
-Field::~Field() {
+int Field::getTileLength() {
+    return tileLength0;
+}
+
+int Field::getWidth() {
+    return width0;
+}
+
+int Field::getHeight() {
+    return height0;
 }
 
 // Пометка заблокированной клетки
@@ -98,3 +107,7 @@ bool Field::isPosInField(int x, int y) const {
         return true;
     return false;
 }
+
+sf::Drawable* Field::getRectToDraw() const {
+    return (sf::Drawable*)&fieldRect0;
+};

@@ -24,7 +24,7 @@ FoodSpawner::~FoodSpawner() {
 // Регенерация еды на новом месте
 void FoodSpawner::respawn() {
     // Строчки со свободными клетками
-    auto rows = field0->getRowsWithFreeTiles();
+    std::vector<std::vector<bool>> rows = field0->getRowsWithFreeTiles();
 
     // Получение произвольной строки
     int yPos = getRand(rows.size());
@@ -38,4 +38,12 @@ void FoodSpawner::respawn() {
 
     // Перемещаем еду в новую позицию
     foodUnit0.setPosition({static_cast<float>(xPos), static_cast<float>(yPos)});
+}
+
+sf::Vector2f FoodSpawner::getCurrentPos() const {
+    return foodUnit0.getPosition();
+}
+
+sf::Drawable* FoodSpawner::getRectToDraw() const {
+    return (sf::Drawable*)&foodUnit0;
 }
