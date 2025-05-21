@@ -2,6 +2,7 @@
 #include <iostream>
 #include "menu/menu.h"
 #include "chess/chess.h"
+#include "minesweeper/minesweeper.hpp"
 #include "snake/snakeGame.h"
 
 int main() {
@@ -14,11 +15,14 @@ int main() {
         chess::Chess chessGame(window);
         chessGame.Run();
     });
+    menu.addOption("Minesweeper", [&window]() {
+        minesweeper::Minesweeper minesweeperGame(window);
+        minesweeperGame.Run();
+    });
     menu.addOption("Snake", [&window]() {
         snake::SnakeGame snake(window);
         snake.Run();
     });
-    menu.addOption("Test game3", []() { std::cout << "Test game3" << std::endl; });
     menu.addOption("Exit", [&window]() { window.close(); });
 
     while (window.isOpen()) {

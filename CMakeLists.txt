@@ -11,6 +11,7 @@ set(${project}_SOURCES src/main.cpp)
 
 add_subdirectory(src/games)
 add_subdirectory(src/chess)
+add_subdirectory(src/minesweeper)
 add_subdirectory(src/snake)
 add_subdirectory(src/menu)
 
@@ -31,7 +32,7 @@ target_compile_features(${project} PRIVATE cxx_std_17)
 target_link_libraries(${project} PRIVATE SFML::Graphics)
 target_link_libraries(${project} PRIVATE SFML::Audio)
 
-target_link_libraries(${project} PRIVATE menu games chess snake)
+target_link_libraries(${project} PRIVATE menu games chess minesweeper snake)
 
 if(ENABLE_DEBUG)
     target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE -g)
