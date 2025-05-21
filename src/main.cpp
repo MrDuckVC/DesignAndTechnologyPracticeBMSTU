@@ -26,7 +26,7 @@ int main() {
             if (event->is<sf::Event::Closed>()) {
                 window.close();
             } else if (event->is<sf::Event::Resized>()) {
-                window.setSize({800, 800});
+                window.setSize({1000, 1000});
             }
 
             menu.handleEvents(*event);

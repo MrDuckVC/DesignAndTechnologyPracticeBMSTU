@@ -2,53 +2,51 @@
 #include <SFML/Graphics.hpp>
 #include <sstream>
 
-#define FLAG "assests/Sprites/flag.png"
-#define BOMB "assests/Sprites/mine.png"
+#define FLAG "assests/minesweeper/Sprites/flag.png"
+#define BOMB "assests/minesweeper/Sprites/mine.png"
 
 using namespace sf;
 
-class Tile
-{
-private:
-	RectangleShape tile;
-	bool isBomb;
-	bool isBlasted;
+class Tile {
+ private:
+    RectangleShape tile;
+    bool isBomb;
+    bool isBlasted;
 
-	bool isRevealed;
-	bool isMarked;
+    bool isRevealed;
+    bool isMarked;
 
-	int adjacentCount;
+    int adjacentCount;
 
-	Color outline;
-	Color default_Color;
-	Color reveal;
-	Color blasted;
-	Color marked;
+    Color outline;
+    Color default_Color;
+    Color reveal;
+    Color blasted;
+    Color marked;
 
-	Font font;
-	Text number;
-	static Texture flagTexture;
-	static Texture mineTexture;
-	Sprite mineSprite;
-	Sprite flagSprite;
-public:
-	static void LoadTexture();
+    Font font;
+    Text number;
+    static Texture flagTexture;
+    static Texture mineTexture;
+    Sprite mineSprite;
+    Sprite flagSprite;
 
-	Tile();
+ public:
+    static void LoadTexture();
 
-	void CreateTile(Vector2f pos, Vector2f size);
+    Tile();
 
-	void SetAdjacent(int count);
-	int GetAdjacentCount();
+    void CreateTile(Vector2f pos, Vector2f size);
 
-	void SetBomb();
-	bool IsBomb();
+    void SetAdjacent(int count);
+    int GetAdjacentCount();
 
-	int Mark();
+    void SetBomb();
+    bool IsBomb();
 
-	bool IsRevealed();
-	bool Reveal(bool clicked);
-	void Render(RenderWindow& window);
+    int Mark();
 
-
+    bool IsRevealed();
+    bool Reveal(bool clicked);
+    void Render(RenderWindow& window);
 };

@@ -1,5 +1,4 @@
 #include "States.hpp"
 
-States::States(RenderWindow& window) : window(window)
-{
+States::States(RenderWindow& window) : window(window) {
 }
