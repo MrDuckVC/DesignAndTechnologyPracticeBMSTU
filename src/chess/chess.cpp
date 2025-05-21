@@ -111,13 +111,15 @@ void Chess::Draw() {
     DrawFigures();
 }
 
-bool Chess::IsSquareUnderAttack(int x, int y, Color defendingColor) {
+bool Chess::IsSquareUnderAttack(int x, int y, Color defendingColor, Cell board[BOARD_SIZE][BOARD_SIZE]) {
+    // Если board не указан, используем текущую доску (desk)
+    Cell (*checkBoard)[BOARD_SIZE] = (board == nullptr) ? desk : board;
+
     // Проверяем все фигуры противника, атакуют ли они данную клетку
     for (int i = 0; i < BOARD_SIZE; i++) {
         for (int j = 0; j < BOARD_SIZE; j++) {
-            if (!desk[i][j].IsEmpty() && desk[i][j].GetFigure().GetFigureColor() != defendingColor) {
-                // Для каждой фигуры противника проверяем, может ли она атаковать клетку (x,y)
-                if (CanAttack(i, j, x, y)) {
+            if (!checkBoard[i][j].IsEmpty() && checkBoard[i][j].GetFigure().GetFigureColor() != defendingColor) {
+                if (CanAttack(i, j, x, y, board)) {
                     return true;
                 }
             }
@@ -125,8 +127,11 @@ bool Chess::IsSquareUnderAttack(int x, int y, Color defendingColor) {
     }
     return false;
 }
-bool Chess::CanAttack(int attackerX, int attackerY, int targetX, int targetY) {
-    Cell& attackerCell = desk[attackerX][attackerY];
+bool Chess::CanAttack(int attackerX, int attackerY, int targetX, int targetY, Cell board[BOARD_SIZE][BOARD_SIZE]) {
+    // Если board не указан, используем текущую доску (desk)
+    Cell (*checkBoard)[BOARD_SIZE] = (board == nullptr) ? desk : board;
+
+    Cell& attackerCell = checkBoard[attackerX][attackerY];
     if (attackerCell.IsEmpty()) {
         return false;
     }
@@ -145,22 +150,25 @@ bool Chess::CanAttack(int attackerX, int attackerY, int targetX, int targetY) {
         case FigureType::BISHOP:
             if (dx != dy)
                 return false;
-            return IsPathClear(attackerX, attackerY, targetX, targetY);
+            return IsPathClear(attackerX, attackerY, targetX, targetY, board);
         case FigureType::ROOK:
             if (dx != 0 && dy != 0)
                 return false;
-            return IsPathClear(attackerX, attackerY, targetX, targetY);
+            return IsPathClear(attackerX, attackerY, targetX, targetY, board);
         case FigureType::QUEEN:
             if (dx != dy && dx != 0 && dy != 0)
                 return false;
-            return IsPathClear(attackerX, attackerY, targetX, targetY);
+            return IsPathClear(attackerX, attackerY, targetX, targetY, board);
         case FigureType::KING:
             return dx <= 1 && dy <= 1;
         default:
             return false;
     }
 }
-bool Chess::IsPathClear(int fromX, int fromY, int toX, int toY) {
+bool Chess::IsPathClear(int fromX, int fromY, int toX, int toY, Cell board[BOARD_SIZE][BOARD_SIZE]) {
+    // Если board не указан, используем текущую доску (desk)
+    Cell (*checkBoard)[BOARD_SIZE] = (board == nullptr) ? desk : board;
+
     int stepX = (toX > fromX) ? 1 : (toX < fromX) ? -1 : 0;
     int stepY = (toY > fromY) ? 1 : (toY < fromY) ? -1 : 0;
 
@@ -168,7 +176,7 @@ bool Chess::IsPathClear(int fromX, int fromY, int toX, int toY) {
     int y = fromY + stepY;
 
     while (x != toX || y != toY) {
-        if (!desk[x][y].IsEmpty()) {
+        if (!checkBoard[x][y].IsEmpty()) {
             return false;
         }
         x += stepX;
@@ -412,14 +420,8 @@ bool Chess::CanMoveTo(int oldN, int oldM, int newN, int newM) {
     }
 
     // Проверяем, атакована ли клетка с королем
-    for (int i = 0; i < BOARD_SIZE; i++) {
-        for (int j = 0; j < BOARD_SIZE; j++) {
-            if (!tempDesk[i][j].IsEmpty() && tempDesk[i][j].GetFigure().GetFigureColor() != movingColor) {
-                if (CanAttack(i, j, kingX, kingY)) {
-                    return false;  // Ход оставляет короля под шахом
-                }
-            }
-        }
+    if (IsSquareUnderAttack(kingX, kingY, movingColor, tempDesk)) {
+        return false;
     }
 
     return true;

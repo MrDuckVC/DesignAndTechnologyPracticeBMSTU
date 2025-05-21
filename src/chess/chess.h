@@ -24,13 +24,14 @@ class Chess : public game::Game {
     void DrawFigures();
     void Draw();
 
-    bool IsSquareUnderAttack(int x, int y, Color defendingColor);
-    bool CanAttack(int attackerX, int attackerY, int targetX, int targetY);
-    bool IsPathClear(int fromX, int fromY, int toX, int toY);
+    bool IsSquareUnderAttack(int x, int y, Color defendingColor, Cell board[BOARD_SIZE][BOARD_SIZE] = nullptr);
+    bool CanAttack(int attackerX, int attackerY, int targetX, int targetY, Cell board[BOARD_SIZE][BOARD_SIZE] = nullptr);
+    bool IsPathClear(int fromX, int fromY, int toX, int toY, Cell board[BOARD_SIZE][BOARD_SIZE] = nullptr);
     bool IsInCheck(Color color);
     bool CanMoveTo(int oldN, int oldM, int newN, int newM);
     void PromotePawn(FigureType newType);
     void Move(int oldN, int oldM, int newN, int newM);
+
  public:
     Chess(sf::RenderWindow& window);
     void Run() override;
