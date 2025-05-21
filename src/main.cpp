@@ -3,6 +3,7 @@
 #include "menu/menu.h"
 #include "chess/chess.h"
 #include "minesweeper/minesweeper.hpp"
+#include "snake/snakeGame.h"
 
 int main() {
     sf::RenderWindow window(sf::VideoMode({1000, 1000}), "Games", sf::Style::Close | sf::Style::Titlebar);
@@ -18,7 +19,10 @@ int main() {
         minesweeper::Minesweeper minesweeperGame(window);
         minesweeperGame.Run();
     });
-    menu.addOption("Test game3", []() { std::cout << "Test game2" << std::endl; });
+    menu.addOption("Snake", [&window]() {
+        snake::SnakeGame snake(window);
+        snake.Run();
+    });
     menu.addOption("Exit", [&window]() { window.close(); });
 
     while (window.isOpen()) {
