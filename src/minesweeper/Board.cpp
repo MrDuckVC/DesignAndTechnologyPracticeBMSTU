@@ -153,11 +153,9 @@ void Board::RightButton(Vector2i mousePos) {
     Vector2i index = FindTileIndex(mousePos);
     bool marked = tiles[index.x][index.y].Mark();
 
-	if (tiles[index.x][index.y].IsRevealed()) {
-		return;
-	}
-
-	std::cout << "Marked: " << marked << std::endl;
+    if (tiles[index.x][index.y].IsRevealed()) {
+        return;
+    }
 
     if (marked) {
         --bombRemaining;

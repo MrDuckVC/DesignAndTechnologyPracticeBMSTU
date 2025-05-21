@@ -1,6 +1,6 @@
 #include "PlayState.hpp"
 
-PlayState::PlayState(RenderWindow& window) : States(window), timeText(font), bombText(font), PopupText(font) {
+PlayState::PlayState(RenderWindow& window) : States(window), PopupText(font) {
     Tile::LoadTexture();
     borderOffset = Vector2f(20.f, 20.f);
     isGameStart = false;
@@ -38,29 +38,16 @@ void PlayState::ResetGame() {
 }
 
 void PlayState::ResetTime() {
-    float textSize = 40.0f;
-    timeText.setFont(font);
-    timeText.setCharacterSize(textSize);
-    timeText.setPosition(Vector2f(gameArea.getPosition().x, gameArea.getPosition().y + gameArea.getGlobalBounds().size.y + 20));
-    timeText.setString("TIME : 0");
-    timer.restart();
+    timeUpdated = true;
     playTime = 0;
 }
 
 void PlayState::ResetBombs() {
     bombCount = BOMB_COUNT;
-    float textSize = 40.0f;
-    bombText.setFont(font);
-    bombText.setCharacterSize(textSize);
-    bombText.setPosition(Vector2f(5.0f * gameArea.getGlobalBounds().size.x / 7, gameArea.getPosition().y + gameArea.getGlobalBounds().size.y + 20));
     UpdateBomb();
 }
 
 void PlayState::UpdateBomb() {
-    std::stringstream ss;
-    ss << "Bombs: ";
-    ss << bombCount;
-    bombText.setString(ss.str());
 }
 
 void PlayState::UpdateTime() {
@@ -69,13 +56,11 @@ void PlayState::UpdateTime() {
     }
 
     if (timer.getElapsedTime().asSeconds() > 1) {
+        if (playTime != timer.getElapsedTime().asSeconds() && !(board.IsWin() || board.IsLoss())) {
+            timeUpdated = true;
+        }
         playTime += timer.getElapsedTime().asSeconds();
         timer.restart();
-
-        std::stringstream ss;
-        ss << "TIME: ";
-        ss << playTime;
-        timeText.setString(ss.str());
     }
 }
 
@@ -188,6 +173,9 @@ void PlayState::Render() {
     } else {
         resetButton->Render(window);
     }
-    window.draw(timeText);
-    window.draw(bombText);
+
+    if (timeUpdated) {
+        window.setTitle("Time: " + std::to_string(playTime) + " | Bombs: " + std::to_string(bombCount));
+        timeUpdated = false;
+    }
 }

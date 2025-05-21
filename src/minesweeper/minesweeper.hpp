@@ -12,7 +12,6 @@ class Minesweeper : game::Game {
     VideoMode screenSize;
     Color screenBgColor;
     PlayState playState;
-    // StateController* controller;
     void CreateWindow();
     void RenderAll();
 

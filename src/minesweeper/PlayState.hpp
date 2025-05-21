@@ -15,14 +15,13 @@ class PlayState : public States {
     Board board;
     // bomb
     int bombCount;
-    Text bombText;
     void ResetBombs();
     void UpdateBomb();
     // Timer
     Clock timer;
     int playTime;
     Font font;
-    Text timeText;
+    bool timeUpdated = true;
     void ResetTime();
     void UpdateTime();
     // Buttons
@@ -41,7 +40,6 @@ class PlayState : public States {
     // Mouse
     bool isGameStart;
     bool isMouseClicked;
-    // void CheckForMouseReleased();
     void CheckForMouseClick(Vector2i mousePos);
     void CheckForMouseHover(Vector2i mousePos);
     void CheckExitState();

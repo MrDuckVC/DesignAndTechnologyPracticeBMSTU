@@ -53,7 +53,6 @@ void Tile::SetAdjacent(int count) {
 
 void Tile::SetBomb() {
     isBomb = true;
-    // mineTexture.loadFromFile(BOMB);
     mineSprite.setTexture(mineTexture);
     mineSprite.setPosition(tile.getPosition() + Vector2f(10.f, 10.f));
 }
@@ -69,7 +68,6 @@ int Tile::Mark() {
     isMarked = !isMarked;
     if (isMarked) {
         tile.setFillColor(marked);
-        // flagTexture.loadFromFile(FLAG);
         flagSprite.setTexture(flagTexture);
         flagSprite.setPosition(tile.getPosition() + Vector2f(15.f, 10.f));
     } else {
