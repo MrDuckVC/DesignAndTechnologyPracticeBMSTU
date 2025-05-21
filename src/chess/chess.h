@@ -16,6 +16,10 @@ class Chess : public game::Game {
     Cell desk[BOARD_SIZE][BOARD_SIZE];
     Color whoseTurn;
 
+    bool isPromotionPendingOfPawn;
+    std::pair<int, int> promotionPosition;
+    const std::vector<FigureType> possibleFiguresToChoose = {FigureType::QUEEN, FigureType::BISHOP, FigureType::KNIGHT, FigureType::ROOK};
+
     void DrawBoard();
     void DrawFigures();
     void Draw();
@@ -25,8 +29,8 @@ class Chess : public game::Game {
     bool IsPathClear(int fromX, int fromY, int toX, int toY);
     bool IsInCheck(Color color);
     bool CanMoveTo(int oldN, int oldM, int newN, int newM);
+    void PromotePawn(FigureType newType);
     void Move(int oldN, int oldM, int newN, int newM);
-
  public:
     Chess(sf::RenderWindow& window);
     void Run() override;

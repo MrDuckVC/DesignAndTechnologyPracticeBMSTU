@@ -1,5 +1,7 @@
 #include "chess.h"
 
+#include <cmath>
+
 namespace {}
 
 namespace chess {
@@ -37,9 +39,59 @@ void Chess::DrawBoard() {
 }
 
 void Chess::DrawFigures() {
+    if (isPromotionPendingOfPawn) {
+        sf::Vector2f pawnCellCenter = desk[promotionPosition.first][promotionPosition.second].GetCellShape().getGlobalBounds().getCenter();
+        float deltaX = static_cast<float>(WINDOW_SIZE) / (BOARD_SIZE * 4);
+        float deltaY = static_cast<float>(WINDOW_SIZE) / (BOARD_SIZE * 4);
+
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                sf::Sprite figureSprite = Figure(possibleFiguresToChoose[i * 2 + j], whoseTurn).GetFigureSprite();
+                figureSprite.setOrigin(figureSprite.getGlobalBounds().getCenter());
+                figureSprite.setPosition({pawnCellCenter.x + deltaY * static_cast<float>(std::pow(-1, i)),
+                                          pawnCellCenter.y + deltaX * static_cast<float>(std::pow(-1, j))});
+                figureSprite.setScale({FIGURE_SCALE / 2, FIGURE_SCALE / 2});
+                window.draw(figureSprite);
+            }
+        }
+
+        // // Draw 4 figures to be choosed in square of pawn
+        // sf::Sprite queenSprite = Figure(FigureType::QUEEN, whoseTurn).GetFigureSprite();
+        // sf::Sprite bishopSprite = Figure(FigureType::BISHOP, whoseTurn).GetFigureSprite();
+        // sf::Sprite knightSprite = Figure(FigureType::KNIGHT, whoseTurn).GetFigureSprite();
+        // sf::Sprite rookSprite = Figure(FigureType::ROOK, whoseTurn).GetFigureSprite();
+
+        // queenSprite.setOrigin(queenSprite.getGlobalBounds().getCenter());
+        // bishopSprite.setOrigin(bishopSprite.getGlobalBounds().getCenter());
+        // knightSprite.setOrigin(knightSprite.getGlobalBounds().getCenter());
+        // rookSprite.setOrigin(rookSprite.getGlobalBounds().getCenter());
+
+        // queenSprite.setScale({FIGURE_SCALE / 2, FIGURE_SCALE / 2});
+        // bishopSprite.setScale({FIGURE_SCALE / 2, FIGURE_SCALE / 2});;
+        // knightSprite.setScale({FIGURE_SCALE / 2, FIGURE_SCALE / 2});;
+        // rookSprite.setScale({FIGURE_SCALE / 2, FIGURE_SCALE / 2});
+
+        // sf::Vector2f pawnCellCenter = desk[promotionPosition.first][promotionPosition.second].GetCellShape().getGlobalBounds().getCenter();
+        // float deltaX = static_cast<float>(WINDOW_SIZE) / (BOARD_SIZE * 4);
+        // float deltaY = static_cast<float>(WINDOW_SIZE) / (BOARD_SIZE * 4);
+
+        // queenSprite.setPosition({pawnCellCenter.x - deltaX, pawnCellCenter.y - deltaY});
+        // bishopSprite.setPosition({pawnCellCenter.x - deltaX, pawnCellCenter.y + deltaY});
+        // knightSprite.setPosition({pawnCellCenter.x + deltaX, pawnCellCenter.y - deltaY});
+        // rookSprite.setPosition({pawnCellCenter.x + deltaX, pawnCellCenter.y + deltaY});
+
+        // window.draw(queenSprite);
+        // window.draw(bishopSprite);
+        // window.draw(knightSprite);
+        // window.draw(rookSprite);
+    }
+
     for (int i = 0; i < BOARD_SIZE; i++) {
         for (int j = 0; j < BOARD_SIZE; j++) {
             if (!desk[i][j].IsEmpty()) {
+                if (isPromotionPendingOfPawn && i == promotionPosition.first && j == promotionPosition.second) {
+                    continue;  // Don't draw the pawn that is being promoted
+                }
                 Figure fig = desk[i][j].GetFigure();
                 sf::Sprite sprite = fig.GetFigureSprite();
                 sprite.setOrigin(sprite.getGlobalBounds().getCenter());
@@ -48,7 +100,7 @@ void Chess::DrawFigures() {
                 } else {
                     sprite.setPosition(desk[i][j].GetCellShape().getGlobalBounds().getCenter());
                 }
-                sprite.setScale({2.0f, 2.0f});
+                sprite.setScale({FIGURE_SCALE, FIGURE_SCALE});
                 window.draw(sprite);
             }
         }
@@ -148,6 +200,10 @@ bool Chess::IsInCheck(Color color) {
 bool Chess::CanMoveTo(int oldN, int oldM, int newN, int newM) {
     // Check if coordinates are valid
     if (oldN < 0 || oldN >= BOARD_SIZE || oldM < 0 || oldM >= BOARD_SIZE || newN < 0 || newN >= BOARD_SIZE || newM < 0 || newM >= BOARD_SIZE) {
+        return false;
+    }
+
+    if (isPromotionPendingOfPawn) {
         return false;
     }
 
@@ -368,13 +424,33 @@ bool Chess::CanMoveTo(int oldN, int oldM, int newN, int newM) {
 
     return true;
 }
+void Chess::PromotePawn(FigureType newType) {
+    if (!isPromotionPendingOfPawn)
+        return;
 
+    auto [x, y] = promotionPosition;
+    Color color = desk[x][y].GetFigure().GetFigureColor();
+    desk[x][y].SetFigure(Figure(newType, color));
+
+    isPromotionPendingOfPawn = false;
+    // Switch turn after promotion
+    whoseTurn = (whoseTurn == Color::WHITE) ? Color::BLACK : Color::WHITE;
+}
 void Chess::Move(int oldN, int oldM, int newN, int newM) {
     if (!CanMoveTo(oldN, oldM, newN, newM)) {
         return;
     }
 
     Figure& figureToMove = desk[oldN][oldM].GetFigure();
+
+    if (figureToMove.GetFigureType() == FigureType::PAWN && (newM == 0 || newM == BOARD_SIZE - 1)) {
+        isPromotionPendingOfPawn = true;
+        promotionPosition = {newN, newM};
+        desk[newN][newM].SetFigure(figureToMove);
+        desk[oldN][oldM].MakeEmpty();
+        desk[newN][newM].GetFigure().CountOneMove();
+        return;
+    }
 
     // Проверка на рокировку
     if (figureToMove.GetFigureType() == FigureType::KING && abs(newN - oldN) == 2) {
@@ -471,6 +547,31 @@ void Chess::Run() {
                 // Получаем координаты мыши
                 sf::Vector2f mousePos = {static_cast<float>(sf::Mouse::getPosition(window).x), static_cast<float>(sf::Mouse::getPosition(window).y)};
                 // Проверяем, попадает ли мышь в клетку
+                if (isPromotionPendingOfPawn) {
+                    sf::Vector2f pawnCellCenter =
+                        desk[promotionPosition.first][promotionPosition.second].GetCellShape().getGlobalBounds().getCenter();
+                    float deltaX = static_cast<float>(WINDOW_SIZE) / (BOARD_SIZE * 4);
+                    float deltaY = static_cast<float>(WINDOW_SIZE) / (BOARD_SIZE * 4);
+
+                    if (desk[promotionPosition.first][promotionPosition.second].GetCellShape().getGlobalBounds().contains(mousePos)) {
+                        if (mousePos.x < pawnCellCenter.x) {
+                            if (mousePos.y < pawnCellCenter.y) {
+                                desk[promotionPosition.first][promotionPosition.second].SetFigure(Figure(FigureType::ROOK, whoseTurn));
+                            } else {
+                                desk[promotionPosition.first][promotionPosition.second].SetFigure(Figure(FigureType::KNIGHT, whoseTurn));
+                            }
+                        } else {
+                            if (mousePos.y < pawnCellCenter.y) {
+                                desk[promotionPosition.first][promotionPosition.second].SetFigure(Figure(FigureType::BISHOP, whoseTurn));
+                            } else {
+                                desk[promotionPosition.first][promotionPosition.second].SetFigure(Figure(FigureType::QUEEN, whoseTurn));
+                            }
+                        }
+                        isPromotionPendingOfPawn = false;
+                        whoseTurn = (whoseTurn == Color::WHITE) ? Color::BLACK : Color::WHITE;
+                    }
+                }
+
                 for (int i = 0; i < BOARD_SIZE; i++) {
                     for (int j = 0; j < BOARD_SIZE; j++) {
                         desk[i][j].GetFigure().SetIsSelected(false);
