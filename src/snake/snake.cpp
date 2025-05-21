@@ -20,6 +20,9 @@ sf::Vector2f Snake::getNewPosOffset(Orientation::dirNum direction) const {
             pos.y += tileLength0;
             break;
         }
+        default: {
+            break;
+        }
     }
     return pos;
 }

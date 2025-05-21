@@ -6,6 +6,7 @@
 
 #include "../games/game.h"
 
+namespace snake {
 class SnakeGame : public game::Game {
  private:
     sf::Texture* textures0[3];  // 0 - field, 1 - food, 2 - snake
@@ -24,6 +25,7 @@ class SnakeGame : public game::Game {
     SnakeGame(sf::RenderWindow& window);
     ~SnakeGame();
 
-    void Run();
+    void Run() override;
     const std::string GetName() override;
 };
+}  // namespace snake

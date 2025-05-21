@@ -15,7 +15,7 @@ int main() {
         chessGame.Run();
     });
     menu.addOption("Snake", [&window]() {
-        SnakeGame snake(window);
+        snake::SnakeGame snake(window);
         snake.Run();
     });
     menu.addOption("Test game3", []() { std::cout << "Test game3" << std::endl; });

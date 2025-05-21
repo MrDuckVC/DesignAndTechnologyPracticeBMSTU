@@ -2,6 +2,7 @@
 
 #include "snakeGame.h"
 
+namespace snake {
 SnakeGame::SnakeGame(sf::RenderWindow& window) : Game(window), tileLength0(window.getSize().x / 10) {
     // Размеры окна должны обязательно нацело делитья на длину плитки
     window.setVerticalSyncEnabled(true);
@@ -77,3 +78,4 @@ void SnakeGame::Run() {
 const std::string SnakeGame::GetName() {
     return "Snake";
 }
+}  // namespace snake
