@@ -30,8 +30,8 @@ class Menu {
     const int titleFontSize = 70;
     const int optionsFontSize = 50;
 
-    const std::string backgroundImageFile = "assests/menuWallpaper.jpg";
-    const std::string fontFile = "assests/RuneScape-ENA.ttf";
+    const std::string backgroundImageFile = "assets/menuWallpaper.jpg";
+    const std::string fontFile = "assets/RuneScape-ENA.ttf";
 
     void updateOptionsSelection();
 

@@ -22,6 +22,7 @@ class Chess : public game::Game {
 
     void DrawBoard();
     void DrawFigures();
+    void DrawEndGame();
     void Draw();
 
     bool IsSquareUnderAttack(int x, int y, Color defendingColor, Cell board[BOARD_SIZE][BOARD_SIZE] = nullptr);
@@ -31,7 +32,7 @@ class Chess : public game::Game {
     bool CanMoveTo(int oldN, int oldM, int newN, int newM);
     void PromotePawn(FigureType newType);
     void Move(int oldN, int oldM, int newN, int newM);
-
+    bool isGameOver();
  public:
     Chess(sf::RenderWindow& window);
     void Run() override;

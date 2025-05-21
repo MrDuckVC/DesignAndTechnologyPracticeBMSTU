@@ -54,36 +54,6 @@ void Chess::DrawFigures() {
                 window.draw(figureSprite);
             }
         }
-
-        // // Draw 4 figures to be choosed in square of pawn
-        // sf::Sprite queenSprite = Figure(FigureType::QUEEN, whoseTurn).GetFigureSprite();
-        // sf::Sprite bishopSprite = Figure(FigureType::BISHOP, whoseTurn).GetFigureSprite();
-        // sf::Sprite knightSprite = Figure(FigureType::KNIGHT, whoseTurn).GetFigureSprite();
-        // sf::Sprite rookSprite = Figure(FigureType::ROOK, whoseTurn).GetFigureSprite();
-
-        // queenSprite.setOrigin(queenSprite.getGlobalBounds().getCenter());
-        // bishopSprite.setOrigin(bishopSprite.getGlobalBounds().getCenter());
-        // knightSprite.setOrigin(knightSprite.getGlobalBounds().getCenter());
-        // rookSprite.setOrigin(rookSprite.getGlobalBounds().getCenter());
-
-        // queenSprite.setScale({FIGURE_SCALE / 2, FIGURE_SCALE / 2});
-        // bishopSprite.setScale({FIGURE_SCALE / 2, FIGURE_SCALE / 2});;
-        // knightSprite.setScale({FIGURE_SCALE / 2, FIGURE_SCALE / 2});;
-        // rookSprite.setScale({FIGURE_SCALE / 2, FIGURE_SCALE / 2});
-
-        // sf::Vector2f pawnCellCenter = desk[promotionPosition.first][promotionPosition.second].GetCellShape().getGlobalBounds().getCenter();
-        // float deltaX = static_cast<float>(WINDOW_SIZE) / (BOARD_SIZE * 4);
-        // float deltaY = static_cast<float>(WINDOW_SIZE) / (BOARD_SIZE * 4);
-
-        // queenSprite.setPosition({pawnCellCenter.x - deltaX, pawnCellCenter.y - deltaY});
-        // bishopSprite.setPosition({pawnCellCenter.x - deltaX, pawnCellCenter.y + deltaY});
-        // knightSprite.setPosition({pawnCellCenter.x + deltaX, pawnCellCenter.y - deltaY});
-        // rookSprite.setPosition({pawnCellCenter.x + deltaX, pawnCellCenter.y + deltaY});
-
-        // window.draw(queenSprite);
-        // window.draw(bishopSprite);
-        // window.draw(knightSprite);
-        // window.draw(rookSprite);
     }
 
     for (int i = 0; i < BOARD_SIZE; i++) {
@@ -106,6 +76,25 @@ void Chess::DrawFigures() {
         }
     }
 }
+void Chess::DrawEndGame() {
+    sf::Font font;
+    if (!font.openFromFile("assets/RuneScape-ENA.ttf")) {
+        throw std::runtime_error("Failed to load font");
+    }
+
+    sf::Text text(font, "Checkmate!", 50);
+    text.setFillColor(sf::Color::Red);
+    text.setOrigin(text.getGlobalBounds().getCenter());
+    text.setPosition({static_cast<float>(WINDOW_SIZE) / 2, static_cast<float>(WINDOW_SIZE) / 2});
+
+    sf::RectangleShape background({text.getGlobalBounds().size.x + 20, text.getGlobalBounds().size.y + 20});
+    background.setFillColor(sf::Color(0, 0, 0, 200));
+    background.setOrigin(background.getGlobalBounds().getCenter());
+    background.setPosition({static_cast<float>(WINDOW_SIZE) / 2, static_cast<float>(WINDOW_SIZE) / 2});
+
+    window.draw(background);
+    window.draw(text);
+}
 void Chess::Draw() {
     DrawBoard();
     DrawFigures();
@@ -113,7 +102,7 @@ void Chess::Draw() {
 
 bool Chess::IsSquareUnderAttack(int x, int y, Color defendingColor, Cell board[BOARD_SIZE][BOARD_SIZE]) {
     // Если board не указан, используем текущую доску (desk)
-    Cell (*checkBoard)[BOARD_SIZE] = (board == nullptr) ? desk : board;
+    Cell(*checkBoard)[BOARD_SIZE] = (board == nullptr) ? desk : board;
 
     // Проверяем все фигуры противника, атакуют ли они данную клетку
     for (int i = 0; i < BOARD_SIZE; i++) {
@@ -129,7 +118,7 @@ bool Chess::IsSquareUnderAttack(int x, int y, Color defendingColor, Cell board[B
 }
 bool Chess::CanAttack(int attackerX, int attackerY, int targetX, int targetY, Cell board[BOARD_SIZE][BOARD_SIZE]) {
     // Если board не указан, используем текущую доску (desk)
-    Cell (*checkBoard)[BOARD_SIZE] = (board == nullptr) ? desk : board;
+    Cell(*checkBoard)[BOARD_SIZE] = (board == nullptr) ? desk : board;
 
     Cell& attackerCell = checkBoard[attackerX][attackerY];
     if (attackerCell.IsEmpty()) {
@@ -167,7 +156,7 @@ bool Chess::CanAttack(int attackerX, int attackerY, int targetX, int targetY, Ce
 }
 bool Chess::IsPathClear(int fromX, int fromY, int toX, int toY, Cell board[BOARD_SIZE][BOARD_SIZE]) {
     // Если board не указан, используем текущую доску (desk)
-    Cell (*checkBoard)[BOARD_SIZE] = (board == nullptr) ? desk : board;
+    Cell(*checkBoard)[BOARD_SIZE] = (board == nullptr) ? desk : board;
 
     int stepX = (toX > fromX) ? 1 : (toX < fromX) ? -1 : 0;
     int stepY = (toY > fromY) ? 1 : (toY < fromY) ? -1 : 0;
@@ -482,6 +471,97 @@ void Chess::Move(int oldN, int oldM, int newN, int newM) {
     whoseTurn = (whoseTurn == Color::WHITE) ? Color::BLACK : Color::WHITE;
 }
 
+bool Chess::isGameOver() {
+    // Don't check for game over during promotion
+    if (isPromotionPendingOfPawn) {
+        return false;
+    }
+
+    if (IsInCheck(whoseTurn)) {
+        // Check if king can move
+        int kingX = -1, kingY = -1;
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            for (int j = 0; j < BOARD_SIZE; j++) {
+                if (!desk[i][j].IsEmpty() && desk[i][j].GetFigure().GetFigureType() == FigureType::KING &&
+                    desk[i][j].GetFigure().GetFigureColor() == whoseTurn) {
+                    kingX = i;
+                    kingY = j;
+                    break;
+                }
+            }
+        }
+        if (kingX == -1) {
+            throw std::invalid_argument("There is no king.");
+        }
+
+        // Check if king can move to any adjacent square
+        for (int i = kingX - 1; i <= kingX + 1; i++) {
+            for (int j = kingY - 1; j <= kingY + 1; j++) {
+                if (i < 0 || i >= BOARD_SIZE || j < 0 || j >= BOARD_SIZE || (i == kingX && j == kingY)) {
+                    continue;
+                }
+                if (CanMoveTo(kingX, kingY, i, j)) {
+                    return false;  // King can escape
+                }
+            }
+        }
+
+        // Check if any piece can block the check or capture the attacker
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            for (int j = 0; j < BOARD_SIZE; j++) {
+                if (!desk[i][j].IsEmpty() && desk[i][j].GetFigure().GetFigureColor() == whoseTurn) {
+                    // Try all possible moves for this piece
+                    for (int x = 0; x < BOARD_SIZE; x++) {
+                        for (int y = 0; y < BOARD_SIZE; y++) {
+                            if (CanMoveTo(i, j, x, y)) {
+                                // Make a temporary move
+                                Cell tempDesk[BOARD_SIZE][BOARD_SIZE];
+                                for (int a = 0; a < BOARD_SIZE; a++) {
+                                    for (int b = 0; b < BOARD_SIZE; b++) {
+                                        tempDesk[a][b] = desk[a][b];
+                                    }
+                                }
+
+                                tempDesk[x][y].SetFigure(tempDesk[i][j].GetFigure());
+                                tempDesk[i][j].MakeEmpty();
+
+                                // Check if king is still in check
+                                int tempKingX = (x == kingX && y == kingY) ? x : kingX;
+                                int tempKingY = (x == kingX && y == kingY) ? y : kingY;
+
+                                if (!IsSquareUnderAttack(tempKingX, tempKingY, whoseTurn, tempDesk)) {
+                                    return false;  // Found a move that gets king out of check
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // If we get here, no moves can save the king - checkmate
+        return true;
+    }
+
+    // Check for stalemate (no legal moves but not in check)
+    bool hasLegalMoves = false;
+    for (int i = 0; i < BOARD_SIZE && !hasLegalMoves; i++) {
+        for (int j = 0; j < BOARD_SIZE && !hasLegalMoves; j++) {
+            if (!desk[i][j].IsEmpty() && desk[i][j].GetFigure().GetFigureColor() == whoseTurn) {
+                for (int x = 0; x < BOARD_SIZE && !hasLegalMoves; x++) {
+                    for (int y = 0; y < BOARD_SIZE && !hasLegalMoves; y++) {
+                        if (CanMoveTo(i, j, x, y)) {
+                            hasLegalMoves = true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return !hasLegalMoves;  // Game over if no legal moves (stalemate)
+}
+
 Chess::Chess(sf::RenderWindow& window) : Game(window), whoseTurn(Color::WHITE) {
     // Растановка клеток.
     for (int i = 0; i < BOARD_SIZE; i++) {
@@ -608,6 +688,9 @@ void Chess::Run() {
         window.clear();
 
         Draw();
+        if (isGameOver()) {
+            DrawEndGame();
+        }
 
         window.display();
     }

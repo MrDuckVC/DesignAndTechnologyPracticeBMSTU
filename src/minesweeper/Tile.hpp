@@ -2,8 +2,8 @@
 #include <SFML/Graphics.hpp>
 #include <sstream>
 
-#define FLAG "assests/minesweeper/Sprites/flag.png"
-#define BOMB "assests/minesweeper/Sprites/mine.png"
+#define FLAG "assets/minesweeper/Sprites/flag.png"
+#define BOMB "assets/minesweeper/Sprites/mine.png"
 
 
 class Tile {

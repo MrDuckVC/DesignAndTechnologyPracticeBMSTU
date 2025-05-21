@@ -2,7 +2,7 @@
 #include <iostream>
 
 Button::Button(std::string name, sf::Color color, float size) : buttonText(font, name, static_cast<unsigned int>(size)) {
-    if (!font.openFromFile("assests/minesweeper/Fonts/static/Orbitron-Regular.ttf")) {
+    if (!font.openFromFile("assets/minesweeper/Fonts/static/Orbitron-Regular.ttf")) {
         throw std::runtime_error("Failed to load font");
     }
 

@@ -70,6 +70,8 @@ int Snake::getCorner(Orientation::dirNum dir1, Orientation::dirNum dir2) const {
         case Orientation::Down:
             corner += 180;
             break;
+        default:
+            break;
     }
 
     if (corner >= 360)

@@ -42,7 +42,7 @@ void Tile::SetAdjacent(int count) {
     ss << adjacentCount;
     number.setString(ss.str());
 
-    if (!font.openFromFile("assests/minesweeper/Fonts/static/Orbitron-Black.ttf")) {
+    if (!font.openFromFile("assets/minesweeper/Fonts/static/Orbitron-Black.ttf")) {
         throw std::runtime_error("Failed to load minesweeper font");
     }
 
