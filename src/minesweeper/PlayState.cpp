@@ -1,8 +1,8 @@
 #include "PlayState.hpp"
 
-PlayState::PlayState(RenderWindow& window) : States(window), PopupText(font) {
+PlayState::PlayState(sf::RenderWindow& window) : States(window), PopupText(font) {
     Tile::LoadTexture();
-    borderOffset = Vector2f(20.f, 20.f);
+    borderOffset = sf::Vector2f(20.f, 20.f);
     isGameStart = false;
     showPopup = false;
     if (!font.openFromFile("assests/minesweeper/Fonts/static/Orbitron-Regular.ttf")) {
@@ -16,15 +16,15 @@ PlayState::PlayState(RenderWindow& window) : States(window), PopupText(font) {
 void PlayState::CreateGameArea() {
     float screenWidth = window.getSize().x;
     float screenMid = window.getSize().x / 2;
-    gameArea.setFillColor(Color(0, 0, 0, 0));
-    gameArea.setPosition(Vector2f(borderOffset.x, borderOffset.y));
-    gameArea.setSize(Vector2f(screenWidth - borderOffset.x * 2, screenWidth - borderOffset.x * 2));
+    gameArea.setFillColor(sf::Color(0, 0, 0, 0));
+    gameArea.setPosition(sf::Vector2f(borderOffset.x, borderOffset.y));
+    gameArea.setSize(sf::Vector2f(screenWidth - borderOffset.x * 2, screenWidth - borderOffset.x * 2));
     gameArea.setOutlineThickness(3.f);
-    gameArea.setOutlineColor(Color(120, 120, 120, 255));
+    gameArea.setOutlineColor(sf::Color(120, 120, 120, 255));
 }
 
 void PlayState::CreateButtons() {
-    resetButton = new Button("RESET", Color(80, 80, 80, 255), 40.f);
+    resetButton = new Button("RESET", sf::Color(80, 80, 80, 255), 40.f);
     float screenMid = window.getSize().x / 2;
     resetButton->SetPosition(screenMid - resetButton->GetBounds().x / 2, window.getSize().y - resetButton->GetBounds().y - 30.f);
 }
@@ -66,19 +66,19 @@ void PlayState::UpdateTime() {
 
 void PlayState::ShowPopup(const std::string& message) {
     showPopup = true;
-    popupBackground.setSize(Vector2f(400.f, 200.f));
-    popupBackground.setFillColor(Color(0, 0, 0, 200));
+    popupBackground.setSize(sf::Vector2f(400.f, 200.f));
+    popupBackground.setFillColor(sf::Color(0, 0, 0, 200));
     popupBackground.setPosition(
-        Vector2f(window.getSize().x / 2 - popupBackground.getSize().x / 2, window.getSize().y / 2 - popupBackground.getSize().y / 2));
+        sf::Vector2f(window.getSize().x / 2 - popupBackground.getSize().x / 2, window.getSize().y / 2 - popupBackground.getSize().y / 2));
     PopupText.setFont(font);
     PopupText.setString(message);
     PopupText.setCharacterSize(40);
-    PopupText.setFillColor(Color::White);
-    PopupText.setPosition(Vector2f(window.getSize().x / 2 - PopupText.getGlobalBounds().size.x / 2, popupBackground.getPosition().y + 20));
-    restartButton = new Button("RESTART", Color(80, 80, 80, 255), 30.f);
+    PopupText.setFillColor(sf::Color::White);
+    PopupText.setPosition(sf::Vector2f(window.getSize().x / 2 - PopupText.getGlobalBounds().size.x / 2, popupBackground.getPosition().y + 20));
+    restartButton = new Button("RESTART", sf::Color(80, 80, 80, 255), 30.f);
     restartButton->SetPosition(window.getSize().x / 2 - restartButton->GetBounds().x - 20.f,
                                popupBackground.getPosition().y + popupBackground.getSize().y - restartButton->GetBounds().y - 20.f);
-    quitButton = new Button("QUIT", Color(80, 80, 80, 255), 30.f);
+    quitButton = new Button("QUIT", sf::Color(80, 80, 80, 255), 30.f);
     quitButton->SetPosition(window.getSize().x / 2 - quitButton->GetBounds().x + 170.f,
                             popupBackground.getPosition().y + popupBackground.getSize().y - quitButton->GetBounds().y - 20.f);
 }
@@ -97,7 +97,7 @@ void PlayState::MoveToNextState(std::stack<States*>* states) {
     return;
 }
 
-void PlayState::PlayGame(bool isLeftClick, bool isRightClick, Vector2i mousePos) {
+void PlayState::PlayGame(bool isLeftClick, bool isRightClick, sf::Vector2i mousePos) {
     if (!isGameStart && timer.getElapsedTime().asSeconds() > 0.5f) {
         isGameStart = true;
         timer.restart();
@@ -119,9 +119,9 @@ void PlayState::PlayGame(bool isLeftClick, bool isRightClick, Vector2i mousePos)
     UpdateBomb();
 }
 
-void PlayState::CheckForMouseClick(Vector2i mousePos) {
-    bool isLeftClick = Mouse::isButtonPressed(Mouse::Button::Left);
-    bool isRightClick = Mouse::isButtonPressed(Mouse::Button::Right);
+void PlayState::CheckForMouseClick(sf::Vector2i mousePos) {
+    bool isLeftClick = sf::Mouse::isButtonPressed(sf::Mouse::Button::Left);
+    bool isRightClick = sf::Mouse::isButtonPressed(sf::Mouse::Button::Right);
     if (showPopup) {
         if (restartButton->IsPressed(window) && isLeftClick) {
             ResetGame();
@@ -138,7 +138,7 @@ void PlayState::CheckForMouseClick(Vector2i mousePos) {
     isMouseClicked = isLeftClick || isRightClick;
 }
 
-void PlayState::CheckForMouseHover(Vector2i mousePos) {
+void PlayState::CheckForMouseHover(sf::Vector2i mousePos) {
     if (showPopup) {
         restartButton->CheckForMouseHover(window);
         quitButton->CheckForMouseHover(window);
@@ -148,13 +148,13 @@ void PlayState::CheckForMouseHover(Vector2i mousePos) {
 }
 
 void PlayState::CheckExitState() {
-    if (Keyboard::isKeyPressed(Keyboard::Key::Escape)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
         isGameQuit = true;
     }
 }
 
 void PlayState::Update() {
-    Vector2i mousePos = Mouse::getPosition(window);
+    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
     CheckForMouseHover(mousePos);
     CheckForMouseClick(mousePos);
     CheckExitState();

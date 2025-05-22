@@ -1,29 +1,27 @@
 #include "Button.hpp"
 #include <iostream>
 
-Button::Button(std::string name, Color color, float size) : buttonText(font, name, static_cast<unsigned int>(size)) {
+Button::Button(std::string name, sf::Color color, float size) : buttonText(font, name, static_cast<unsigned int>(size)) {
     if (!font.openFromFile("assests/minesweeper/Fonts/static/Orbitron-Regular.ttf")) {
-        std::cerr << "Error\n";
+        throw std::runtime_error("Failed to load font");
     }
 
     defaultColor = color;
-    highlightedColor = Color(255, 255, 255, 255);
+    highlightedColor = sf::Color(255, 255, 255, 255);
     buttonName = name;
 
     buttonText.setFillColor(defaultColor);
 }
 
-Button::~Button() {
-}
 
 void Button::SetPosition(float x, float y) {
     buttonText.setPosition(sf::Vector2f(x, y));
 }
 
 // Mouse Input
-void Button::CheckForMouseHover(RenderWindow& window) {
-    Vector2i pixelPos = Mouse::getPosition(window);
-    Vector2f worldPos = window.mapPixelToCoords(pixelPos);
+void Button::CheckForMouseHover(sf::RenderWindow& window) {
+    sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
+    sf::Vector2f worldPos = window.mapPixelToCoords(pixelPos);
     if (buttonText.getGlobalBounds().contains(worldPos)) {
         buttonText.setFillColor(highlightedColor);
     } else {
@@ -31,20 +29,20 @@ void Button::CheckForMouseHover(RenderWindow& window) {
     }
 }
 
-bool Button::IsPressed(RenderWindow& window) {
-    Vector2i pixelPos = Mouse::getPosition(window);
-    Vector2f worldPos = window.mapPixelToCoords(pixelPos);
+bool Button::IsPressed(sf::RenderWindow& window) {
+    sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
+    sf::Vector2f worldPos = window.mapPixelToCoords(pixelPos);
     return buttonText.getGlobalBounds().contains(worldPos);
 }
 
-Vector2f Button::GetBounds() {
-    return Vector2f(buttonText.getGlobalBounds().size.x, buttonText.getGlobalBounds().size.y);
+sf::Vector2f Button::GetBounds() {
+    return sf::Vector2f(buttonText.getGlobalBounds().size.x, buttonText.getGlobalBounds().size.y);
 }
 
-Vector2f Button::GetPosition() {
+sf::Vector2f Button::GetPosition() {
     return buttonText.getPosition();
 }
 
-void Button::Render(RenderWindow& window) {
+void Button::Render(sf::RenderWindow& window) {
     window.draw(buttonText);
 }

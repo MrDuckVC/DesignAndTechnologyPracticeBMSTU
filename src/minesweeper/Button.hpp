@@ -2,28 +2,27 @@
 #include <string.h>
 #include <SFML/Graphics.hpp>
 
-using namespace sf;
+
 
 class Button {
  private:
     std::string buttonName;
-    Font font;
-    Text buttonText;
-    Color defaultColor;
-    Color highlightedColor;
+    sf::Font font;
+    sf::Text buttonText;
+    sf::Color defaultColor;
+    sf::Color highlightedColor;
 
  public:
-    Button(std::string name, Color, float size);
-    virtual ~Button();
+    Button(std::string name, sf::Color, float size);
 
     void SetPosition(float x, float y);
 
     // Mouse Input
-    void CheckForMouseHover(RenderWindow& window);
-    bool IsPressed(RenderWindow& window);
+    void CheckForMouseHover(sf::RenderWindow& window);
+    bool IsPressed(sf::RenderWindow& window);
 
-    Vector2f GetBounds();
-    Vector2f GetPosition();
+    sf::Vector2f GetBounds();
+    sf::Vector2f GetPosition();
 
-    void Render(RenderWindow& window);
+    void Render(sf::RenderWindow& window);
 };

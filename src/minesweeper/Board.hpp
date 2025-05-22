@@ -6,13 +6,13 @@
 
 class Board {
  private:
-    Vector2f tileSize;
-    Vector2i tileCount = Vector2i(12, 12);
+    sf::Vector2f tileSize;
+    sf::Vector2i tileCount = sf::Vector2i(12, 12);
 
     Tile** tiles;
 
-    Vector2f areaPosition;
-    Vector2f areaSize;
+    sf::Vector2f areaPosition;
+    sf::Vector2f areaSize;
 
     int bombCount;
     int bombRemaining;
@@ -28,20 +28,20 @@ class Board {
     int SetSingleAdjacent(int x, int y);
     void SetAllAdjacentNumbers();
     void SetTileProperities();
-    Vector2i FindTileIndex(Vector2i mousePos);
-    void FloodFill(Vector2i pos);
+    sf::Vector2i FindTileIndex(sf::Vector2i mousePos);
+    void FloodFill(sf::Vector2i pos);
     void DeleteAllTiles();
 
  public:
     Board();
     virtual ~Board();
 
-    void CreateNewBoard(RectangleShape area, int bombs);
+    void CreateNewBoard(sf::RectangleShape area, int bombs);
     void ResetBoard();
-    void LeftButton(Vector2i mousePos);
-    void RightButton(Vector2i mousePos);
+    void LeftButton(sf::Vector2i mousePos);
+    void RightButton(sf::Vector2i mousePos);
     bool IsLoss();
     bool IsWin();
     int GetRemainingBombs();
-    void RenderBoard(RenderWindow& window);
+    void RenderBoard(sf::RenderWindow& window);
 };

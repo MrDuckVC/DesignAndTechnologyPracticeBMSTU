@@ -5,11 +5,10 @@
 #define FLAG "assests/minesweeper/Sprites/flag.png"
 #define BOMB "assests/minesweeper/Sprites/mine.png"
 
-using namespace sf;
 
 class Tile {
  private:
-    RectangleShape tile;
+ 	sf::RectangleShape tile;
     bool isBomb;
     bool isBlasted;
 
@@ -18,25 +17,25 @@ class Tile {
 
     int adjacentCount;
 
-    Color outline;
-    Color default_Color;
-    Color reveal;
-    Color blasted;
-    Color marked;
+    sf::Color outline;
+    sf::Color default_Color;
+    sf::Color reveal;
+    sf::Color blasted;
+    sf::Color marked;
 
-    Font font;
-    Text number;
-    static Texture flagTexture;
-    static Texture mineTexture;
-    Sprite mineSprite;
-    Sprite flagSprite;
+    sf::Font font;
+    sf::Text number;
+    static sf::Texture flagTexture;
+    static sf::Texture mineTexture;
+    sf::Sprite mineSprite;
+    sf::Sprite flagSprite;
 
  public:
     static void LoadTexture();
 
     Tile();
 
-    void CreateTile(Vector2f pos, Vector2f size);
+    void CreateTile(sf::Vector2f pos, sf::Vector2f size);
 
     void SetAdjacent(int count);
     int GetAdjacentCount();
@@ -48,5 +47,5 @@ class Tile {
 
     bool IsRevealed();
     bool Reveal(bool clicked);
-    void Render(RenderWindow& window);
+    void Render(sf::RenderWindow& window);
 };

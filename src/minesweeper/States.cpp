@@ -1,4 +1,4 @@
 #include "States.hpp"
 
-States::States(RenderWindow& window) : window(window) {
+States::States(sf::RenderWindow& window) : window(window) {
 }

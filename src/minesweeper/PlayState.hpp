@@ -9,8 +9,8 @@
 class PlayState : public States {
  private:
     // Minesweeper Area
-    Vector2f borderOffset;
-    RectangleShape gameArea;
+    sf::Vector2f borderOffset;
+    sf::RectangleShape gameArea;
     void CreateGameArea();
     Board board;
     // bomb
@@ -18,9 +18,9 @@ class PlayState : public States {
     void ResetBombs();
     void UpdateBomb();
     // Timer
-    Clock timer;
+    sf::Clock timer;
     int playTime;
-    Font font;
+    sf::Font font;
     bool timeUpdated = true;
     void ResetTime();
     void UpdateTime();
@@ -28,11 +28,11 @@ class PlayState : public States {
     Button* resetButton;
     void CreateButtons();
     void ResetGame();
-    void PlayGame(bool isLeftClick, bool isRightClick, Vector2i mousePos);
+    void PlayGame(bool isLeftClick, bool isRightClick, sf::Vector2i mousePos);
     // Win/Lose Popup
     bool showPopup;
-    RectangleShape popupBackground;
-    Text PopupText;
+    sf::RectangleShape popupBackground;
+    sf::Text PopupText;
     Button* restartButton;
     Button* quitButton;
     void ShowPopup(const std::string& message);
@@ -40,13 +40,13 @@ class PlayState : public States {
     // Mouse
     bool isGameStart;
     bool isMouseClicked;
-    void CheckForMouseClick(Vector2i mousePos);
-    void CheckForMouseHover(Vector2i mousePos);
+    void CheckForMouseClick(sf::Vector2i mousePos);
+    void CheckForMouseHover(sf::Vector2i mousePos);
     void CheckExitState();
 
  public:
     bool isGameQuit = false;
-    PlayState(RenderWindow& window);
+    PlayState(sf::RenderWindow& window);
     virtual ~PlayState();
     void MoveToNextState(std::stack<States*>* states);
     void Update();

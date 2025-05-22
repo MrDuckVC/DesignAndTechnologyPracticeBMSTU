@@ -30,10 +30,10 @@ void Board::InitTiles() {
 }
 
 void Board::CreateAllTiles() {
-    Vector2f tilePos;
+    sf::Vector2f tilePos;
     for (int i = 0; i < tileCount.x; ++i) {
         for (int j = 0; j < tileCount.y; ++j) {
-            tilePos = areaPosition + Vector2f(i * tileSize.x, j * tileSize.y);
+            tilePos = areaPosition + sf::Vector2f(i * tileSize.x, j * tileSize.y);
             tiles[i][j].CreateTile(tilePos, tileSize);
         }
     }
@@ -58,7 +58,7 @@ bool Board::CheckInBounds(int x, int y) {
 }
 
 int Board::SetSingleAdjacent(int x, int y) {
-    Vector2i index;
+	sf::Vector2i index;
     int count = 0;
     for (int i = -1; i <= 1; ++i) {
         for (int j = -1; j <= 1; ++j) {
@@ -88,15 +88,15 @@ void Board::SetTileProperities() {
     SetAllAdjacentNumbers();
 }
 
-Vector2i Board::FindTileIndex(Vector2i mousePos) {
-    mousePos -= static_cast<Vector2i>(areaPosition);
+sf::Vector2i Board::FindTileIndex(sf::Vector2i mousePos) {
+    mousePos -= static_cast<sf::Vector2i>(areaPosition);
     mousePos.x /= static_cast<int>(tileSize.x);
     mousePos.y /= static_cast<int>(tileSize.y);
 
     return mousePos;
 }
 
-void Board::CreateNewBoard(RectangleShape area, int bombs) {
+void Board::CreateNewBoard(sf::RectangleShape area, int bombs) {
     bombCount = bombs;
     areaPosition = area.getPosition();
     tileSize.x = area.getSize().x / tileCount.x;
@@ -112,7 +112,7 @@ void Board::ResetBoard() {
     SetTileProperities();
 }
 
-void Board::FloodFill(Vector2i pos) {
+void Board::FloodFill(sf::Vector2i pos) {
     if (tiles[pos.x][pos.y].GetAdjacentCount() == 0) {
         for (int i = -1; i <= 1; ++i) {
             for (int j = -1; j <= 1; ++j) {
@@ -124,7 +124,7 @@ void Board::FloodFill(Vector2i pos) {
                         bool revealed = tiles[x][y].Reveal(false);
                         if (revealed) {
                             unrevealedTileCount--;
-                            FloodFill(Vector2i(x, y));
+                            FloodFill(sf::Vector2i(x, y));
                         }
                     }
                 }
@@ -133,8 +133,8 @@ void Board::FloodFill(Vector2i pos) {
     }
 }
 
-void Board::LeftButton(Vector2i mousePos) {
-    Vector2i index = FindTileIndex(mousePos);
+void Board::LeftButton(sf::Vector2i mousePos) {
+    sf::Vector2i index = FindTileIndex(mousePos);
     bool revealed = tiles[index.x][index.y].Reveal(true);
 
     if (revealed) {
@@ -149,8 +149,8 @@ void Board::LeftButton(Vector2i mousePos) {
     }
 }
 
-void Board::RightButton(Vector2i mousePos) {
-    Vector2i index = FindTileIndex(mousePos);
+void Board::RightButton(sf::Vector2i mousePos) {
+    sf::Vector2i index = FindTileIndex(mousePos);
     bool marked = tiles[index.x][index.y].Mark();
 
     if (tiles[index.x][index.y].IsRevealed()) {
@@ -190,7 +190,7 @@ int Board::GetRemainingBombs() {
     return bombRemaining;
 }
 
-void Board::RenderBoard(RenderWindow& window) {
+void Board::RenderBoard(sf::RenderWindow& window) {
     for (int i = 0; i < tileCount.x; ++i) {
         for (int j = 0; j < tileCount.y; ++j) {
             tiles[i][j].Render(window);

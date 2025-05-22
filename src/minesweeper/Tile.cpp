@@ -1,7 +1,7 @@
 #include "Tile.hpp"
 
-Texture Tile::flagTexture;
-Texture Tile::mineTexture;
+sf::Texture Tile::flagTexture;
+sf::Texture Tile::mineTexture;
 
 void Tile::LoadTexture() {
     if (!Tile::flagTexture.loadFromFile(FLAG) || !Tile::mineTexture.loadFromFile(BOMB)) {
@@ -10,11 +10,11 @@ void Tile::LoadTexture() {
 }
 
 Tile::Tile() : number(font), flagSprite(flagTexture), mineSprite(mineTexture) {
-    outline = Color(100, 100, 100, 255);
-    default_Color = Color(150, 150, 150, 255);
-    reveal = Color(50, 50, 50, 255);
-    blasted = Color(200, 0, 0, 255);
-    marked = Color(0, 200, 0, 255);
+    outline = sf::Color(100, 100, 100, 255);
+    default_Color = sf::Color(150, 150, 150, 255);
+    reveal = sf::Color(50, 50, 50, 255);
+    blasted = sf::Color(200, 0, 0, 255);
+    marked = sf::Color(0, 200, 0, 255);
 
     adjacentCount = 0;
     isBomb = false;
@@ -28,7 +28,7 @@ Tile::Tile() : number(font), flagSprite(flagTexture), mineSprite(mineTexture) {
     mineSprite.setScale({0.04f, 0.04f});
 }
 
-void Tile::CreateTile(Vector2f pos, Vector2f size) {
+void Tile::CreateTile(sf::Vector2f pos, sf::Vector2f size) {
     tile.setPosition(pos);
     tile.setSize(size);
     tile.setFillColor(default_Color);
@@ -47,14 +47,14 @@ void Tile::SetAdjacent(int count) {
     }
 
     number.setFont(font);
-    number.setFillColor(Color::White);
-    number.setPosition(Vector2f(tile.getPosition().x + tile.getSize().x / 3, tile.getPosition().y + 5));
+    number.setFillColor(sf::Color::White);
+    number.setPosition(sf::Vector2f(tile.getPosition().x + tile.getSize().x / 3, tile.getPosition().y + 5));
 }
 
 void Tile::SetBomb() {
     isBomb = true;
     mineSprite.setTexture(mineTexture);
-    mineSprite.setPosition(tile.getPosition() + Vector2f(10.f, 10.f));
+    mineSprite.setPosition(tile.getPosition() + sf::Vector2f(10.f, 10.f));
 }
 
 bool Tile::IsBomb() {
@@ -69,7 +69,7 @@ int Tile::Mark() {
     if (isMarked) {
         tile.setFillColor(marked);
         flagSprite.setTexture(flagTexture);
-        flagSprite.setPosition(tile.getPosition() + Vector2f(15.f, 10.f));
+        flagSprite.setPosition(tile.getPosition() + sf::Vector2f(15.f, 10.f));
     } else {
         tile.setFillColor(default_Color);
     }
@@ -100,7 +100,7 @@ int Tile::GetAdjacentCount() {
     return adjacentCount;
 }
 
-void Tile::Render(RenderWindow& window) {
+void Tile::Render(sf::RenderWindow& window) {
     window.draw(tile);
     if (isRevealed) {
         if (isBomb) {
