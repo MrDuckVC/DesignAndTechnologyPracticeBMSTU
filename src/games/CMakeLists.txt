@@ -12,3 +12,9 @@ set(${project}_HEADERS game.h)
 set(${project}_SOURCE_LIST ${${project}_SOURCES} ${${project}_HEADERS})
 
 add_library(${project} STATIC ${${project}_SOURCE_LIST})
+
+target_link_libraries(${project} PRIVATE
+    SFML::Graphics
+    SFML::Window
+    SFML::System
+)
