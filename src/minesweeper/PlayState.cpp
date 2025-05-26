@@ -87,16 +87,6 @@ void PlayState::HidePopup() {
     showPopup = false;
 }
 
-PlayState::~PlayState() {
-    delete resetButton;
-    delete restartButton;
-    delete quitButton;
-}
-
-void PlayState::MoveToNextState(std::stack<States*>* states) {
-    return;
-}
-
 void PlayState::PlayGame(bool isLeftClick, bool isRightClick, sf::Vector2i mousePos) {
     if (!isGameStart && timer.getElapsedTime().asSeconds() > 0.5f) {
         isGameStart = true;

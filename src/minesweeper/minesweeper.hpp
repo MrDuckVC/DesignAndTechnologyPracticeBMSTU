@@ -4,12 +4,11 @@
 #include "../games/game.h"
 #include "PlayState.hpp"
 
-
 namespace minesweeper {
-class Minesweeper : game::Game {
+class Minesweeper : public game::Game {
  private:
- 	sf::VideoMode screenSize;
- 	sf::Color screenBgColor;
+    sf::VideoMode screenSize;
+    sf::Color screenBgColor;
     PlayState playState;
     void CreateWindow();
     void RenderAll();

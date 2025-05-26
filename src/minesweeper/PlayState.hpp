@@ -47,8 +47,6 @@ class PlayState : public States {
  public:
     bool isGameQuit = false;
     PlayState(sf::RenderWindow& window);
-    virtual ~PlayState();
-    void MoveToNextState(std::stack<States*>* states);
     void Update();
     void Render();
 };

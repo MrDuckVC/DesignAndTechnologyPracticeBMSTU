@@ -9,7 +9,7 @@ Board::Board() {
 }
 
 void Board::DeleteAllTiles() {
-    if (tiles == NULL) {
+    if (tiles == nullptr) {
         return;
     }
     for (int i = 0; i < tileCount.y; ++i) {
@@ -58,7 +58,7 @@ bool Board::CheckInBounds(int x, int y) {
 }
 
 int Board::SetSingleAdjacent(int x, int y) {
-	sf::Vector2i index;
+    sf::Vector2i index;
     int count = 0;
     for (int i = -1; i <= 1; ++i) {
         for (int j = -1; j <= 1; ++j) {

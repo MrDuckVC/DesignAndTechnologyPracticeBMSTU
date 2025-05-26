@@ -78,7 +78,7 @@ void Chess::DrawFigures() {
 }
 void Chess::DrawEndGame() {
     sf::Font font;
-    if (!font.openFromFile("assets/RuneScape-ENA.ttf")) {
+    if (!font.openFromFile("assets/menu/RuneScape-ENA.ttf")) {
         throw std::runtime_error("Failed to load font");
     }
 

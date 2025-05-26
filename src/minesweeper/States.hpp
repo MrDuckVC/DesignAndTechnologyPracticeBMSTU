@@ -11,7 +11,6 @@ class States {
 
  public:
     States(sf::RenderWindow& window);
-    virtual void MoveToNextState(std::stack<States*>* states) = 0;
     virtual void Update() = 0;
     virtual void Render() = 0;
 };
