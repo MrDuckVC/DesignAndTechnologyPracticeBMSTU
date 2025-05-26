@@ -13,8 +13,8 @@ void Minesweeper::RenderAll() {
 
 Minesweeper::Minesweeper(sf::RenderWindow& window) : Game(window), playState(PlayState(window)) {
     screenBgColor = sf::Color(20, 20, 20, 225);
-    screenSize.size.x = 1000;
-    screenSize.size.y = 1000;
+    screenSize.size.x = 800;
+    screenSize.size.y = 800;
     CreateWindow();
 }
 

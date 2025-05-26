@@ -6,7 +6,7 @@
 #include "snake/snakeGame.h"
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode({1000, 1000}), "Games", sf::Style::Close | sf::Style::Titlebar);
+    sf::RenderWindow window(sf::VideoMode({800, 800}), "Games", sf::Style::Close | sf::Style::Titlebar);
     window.setFramerateLimit(240);
 
     menu::Menu menu(window);
@@ -30,7 +30,7 @@ int main() {
             if (event->is<sf::Event::Closed>()) {
                 window.close();
             } else if (event->is<sf::Event::Resized>()) {
-                window.setSize({1000, 1000});
+                window.setSize({800, 800});
             }
 
             menu.handleEvents(*event);

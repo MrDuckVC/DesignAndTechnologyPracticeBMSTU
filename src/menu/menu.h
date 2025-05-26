@@ -21,7 +21,7 @@ class Menu {
 
     int selectedOption = -1;
 
-    const float titleY = 300.0f;
+    const float titleY = 250.0f;
     const float titleAndOptionsSpacing = 100.0f;
     const float optionsYSpacing = 60.0f;
     const float conorTextBorderYSpacing = 20.0f;

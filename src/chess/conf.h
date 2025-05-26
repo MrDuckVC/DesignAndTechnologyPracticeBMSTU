@@ -4,7 +4,7 @@
 
 namespace chess {
 const int BOARD_SIZE = 8;
-const int WINDOW_SIZE = 1000;
+const int WINDOW_SIZE = 800;
 
 const float FIGURE_SCALE = 2.0f;
 
